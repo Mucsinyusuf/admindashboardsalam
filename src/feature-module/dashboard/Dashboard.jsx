@@ -52,7 +52,7 @@ const Dashboard = () => {
         data: [-150, -90, -50, -180, -50, -70, -100, -90, -105],
       },
     ],
-    colors: ["#5bb450", "#FF0000"],
+    colors: ["#003057", "#FFD580"],
     chart: {
       type: "bar",
       height: 320,
@@ -107,7 +107,7 @@ const Dashboard = () => {
               <div
                 className="dash-widget w-100 p-3 text-white"
                 style={{
-                  backgroundColor: "#1A4C37",
+                  backgroundColor: "#FFD580",
                   borderRadius: "8px",
                 }}
               >
@@ -139,7 +139,7 @@ const Dashboard = () => {
           <div className="col-xl-3 col-sm-6 col-12 d-flex">
             <div
               className="dash-count w-100 text-white p-3"
-              style={{ backgroundColor: "#1A4C37", borderRadius: "8px" }}
+              style={{ backgroundColor: "#003057", borderRadius: "8px" }}
             >
               <div className="d-flex justify-content-between align-items-center">
                 <div>
@@ -154,7 +154,7 @@ const Dashboard = () => {
           <div className="col-xl-3 col-sm-6 col-12 d-flex">
             <div
               className="dash-count w-100 text-white p-3"
-              style={{ backgroundColor: "#1A4C37", borderRadius: "8px" }}
+              style={{ backgroundColor: "#003057", borderRadius: "8px" }}
             >
               <div className="d-flex justify-content-between align-items-center">
                 <div>
@@ -169,7 +169,7 @@ const Dashboard = () => {
           <div className="col-xl-3 col-sm-6 col-12 d-flex">
             <div
               className="dash-count w-100 text-white p-3"
-              style={{ backgroundColor: "#1A4C37", borderRadius: "8px" }}
+              style={{ backgroundColor: "#003057", borderRadius: "8px" }}
             >
               <div className="d-flex justify-content-between align-items-center">
                 <div>
@@ -188,7 +188,7 @@ const Dashboard = () => {
           <div className="col-xl-3 col-sm-6 col-12 d-flex">
             <div
               className="dash-count w-100 text-white p-3"
-              style={{ backgroundColor: "#1A4C37", borderRadius: "8px" }}
+              style={{ backgroundColor: "#003057", borderRadius: "8px" }}
             >
               <div className="d-flex justify-content-between align-items-center">
                 <div>
