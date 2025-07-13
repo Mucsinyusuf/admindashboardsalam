@@ -35,12 +35,12 @@ export const SidebarData = [
         submenuHdr: "Client & Company Management",
       
         submenuItems: [
-          { label: "Corporate Onboarding", link: "/product-list", icon:<Icon.Box />,showSubRoute: false,submenu: false },
-          { label: "Company KYC Documents", link: "/add-product", icon:  <Icon.PlusSquare />,showSubRoute: false, submenu: false },
-          { label: "Company User Mapping", link: "/expired-products", icon:  <Icon.Codesandbox  />,showSubRoute: false,submenu: false },
-          { label: "Company Access Rights", link: "/low-stocks", icon: <Icon.TrendingDown  />,showSubRoute: false,submenu: false },
-          { label: "Profile Management",icon:  <Icon.UserCheck />, link: "/product-details" },
-          { label: "Company Signatories",icon:  <Icon.UserCheck />, link: "/qrcode"},
+          { label: "Corporate Onboarding", link: "/corporate-onboarding", icon:<Icon.Box />,showSubRoute: false,submenu: false },
+          { label: "Company KYC Documents", link: "/company-KYC", icon:  <Icon.PlusSquare />,showSubRoute: false, submenu: false },
+          { label: "Company User Mapping", link: "/company-user-mapping", icon:  <Icon.Codesandbox  />,showSubRoute: false,submenu: false },
+          { label: "Company Access Rights", link: "/company-access-rights", icon: <Icon.TrendingDown  />,showSubRoute: false,submenu: false },
+          { label: "Profile Management",icon:  <Icon.UserCheck />, link: "/profile-management" },
+          { label: "Company Signatories",icon:  <Icon.UserCheck />, link: "/companysignatories"},
         ]
       },
       {

@@ -205,14 +205,14 @@ export const publicRoutes = [
   {
     id: 2,
     path: routes.productlist,
-    name: "products",
+    name: "corporate-onboarding",
     element: <CustomerOnboarding/>,
     route: Route,
   },
   {
     id: 3,
     path: routes.addproduct,
-    name: "products",
+    name: "company-KYC",
     element: <KYCForm />,
     route: Route,
   },
@@ -786,14 +786,14 @@ export const publicRoutes = [
   {
     id: 58,
     path: routes.expiredproduct,
-    name: "expiredproduct",
+    name: "company-user-mapping",
     element: <CompanyUserMapping />,
     route: Route,
   },
   {
     id: 59,
     path: routes.lowstock,
-    name: "lowstock",
+    name: "company-access-rights",
     element: <AccessRights/>,
     route: Route,
   },
@@ -885,7 +885,7 @@ export const publicRoutes = [
   {
     id: 67,
     path: routes.qrcode,
-    name: "qrcode",
+    name: "companysignatories",
     element: <CompanySignatories/>,
     route: Route,
   },
@@ -1361,7 +1361,7 @@ export const publicRoutes = [
   {
     id: 113,
     path: routes.productdetails,
-    name: "productdetails",
+    name: "profile-management",
     element: <ProfileManagement/>,
     route: Route,
   },

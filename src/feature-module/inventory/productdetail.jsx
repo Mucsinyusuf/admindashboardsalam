@@ -1,6 +1,7 @@
 import React from 'react';
 import { DatePicker, Switch } from 'antd';
 import Select from 'react-select';
+import companyLogo from '../../assets/img/company/company-logo.png';
 
 const ProfileManagement = () => {
   const riskProfiles = [
@@ -22,113 +23,133 @@ const ProfileManagement = () => {
   return (
     <div className="page-wrapper">
       <div className="content">
-        <div className="page-header">
+        <div className="page-header mb-4">
           <div className="page-title">
             <h4>Profile Management</h4>
             <h6>Manage company profile information</h6>
           </div>
         </div>
 
-        <div className="row">
+        <div className="row g-4">
+          {/* Form Section */}
           <div className="col-lg-8 col-sm-12">
-            <div className="card">
+            <div className="card shadow-sm border-0">
               <div className="card-body">
                 <form>
-                  <div className="row">
+                  <div className="row g-3">
                     <div className="col-lg-6 col-sm-12">
                       <div className="input-blocks">
                         <label>Company Name</label>
                         <input type="text" className="form-control" value="ABC Ltd" readOnly />
                       </div>
                     </div>
+
                     <div className="col-lg-6 col-sm-12">
                       <div className="input-blocks">
                         <label>Contact Email</label>
                         <input type="email" className="form-control" placeholder="contact@company.com" />
                       </div>
                     </div>
+
                     <div className="col-lg-6 col-sm-12">
                       <div className="input-blocks">
                         <label>Contact Number</label>
                         <input type="text" className="form-control" placeholder="+254..." />
                       </div>
                     </div>
+
                     <div className="col-lg-6 col-sm-12">
                       <div className="input-blocks">
                         <label>Primary Contact Person</label>
                         <input type="text" className="form-control" placeholder="John Doe" />
                       </div>
                     </div>
+
                     <div className="col-lg-6 col-sm-12">
                       <div className="input-blocks">
                         <label>Risk Profile</label>
                         <Select options={riskProfiles} placeholder="Select Risk Profile" />
                       </div>
                     </div>
+
                     <div className="col-lg-6 col-sm-12">
                       <div className="input-blocks">
                         <label>Registered Address</label>
                         <input type="text" className="form-control" placeholder="Address" />
                       </div>
                     </div>
+
                     <div className="col-lg-6 col-sm-12">
                       <div className="input-blocks">
                         <label>Branch Affiliation</label>
                         <Select options={branches} placeholder="Select Branch" />
                       </div>
                     </div>
+
                     <div className="col-lg-6 col-sm-12">
                       <div className="input-blocks d-flex justify-content-between align-items-center">
                         <label>Active Status</label>
                         <Switch defaultChecked />
                       </div>
                     </div>
+
                     <div className="col-lg-12">
                       <div className="input-blocks">
                         <label>Linked Bank Accounts</label>
-                        <textarea className="form-control" placeholder="A/C 123456789, A/C 987654321" />
+                        <textarea className="form-control" placeholder="A/C 123456789, A/C 987654321" rows={2} />
                       </div>
                     </div>
+
                     <div className="col-lg-6 col-sm-12">
                       <div className="input-blocks">
                         <label>Date of Last Update</label>
-                        <DatePicker className="form-control" format="DD-MM-YYYY" />
+                        <DatePicker className="form-control w-100" format="DD-MM-YYYY" />
                       </div>
                     </div>
+
                     <div className="col-lg-6 col-sm-12">
                       <div className="input-blocks">
                         <label>Preferred Language</label>
                         <Select options={languages} placeholder="Select Language" />
                       </div>
                     </div>
+
                     <div className="col-lg-12">
                       <div className="input-blocks">
                         <label>Remarks</label>
-                        <textarea className="form-control" placeholder="Admin notes or update history..." />
+                        <textarea className="form-control" placeholder="Admin notes or update history..." rows={3} />
                       </div>
                     </div>
                   </div>
 
-                  <div className="text-end mt-3">
-                    <button type="submit" className="btn btn-submit me-2">Save</button>
-                    <button type="reset" className="btn btn-cancel">Cancel</button>
+                  <div className="text-end mt-4">
+                    <button type="submit" className="btn btn-primary me-2">Save</button>
+                    <button type="reset" className="btn btn-secondary">Cancel</button>
                   </div>
                 </form>
               </div>
             </div>
           </div>
 
-          {/* Optional sidebar for image or status */}
+          {/* Logo Section */}
           <div className="col-lg-4 col-sm-12">
-            <div className="card">
-              <div className="card-body text-center">
-                <img src="assets/img/company/company-logo.png" alt="Company Logo" width={100} />
-                <p className="mt-2">Company Logo</p>
+            <div className="card shadow-sm border-0">
+              <div className="card-body text-center d-flex justify-content-center align-items-center" style={{ height: "100%" }}>
+                <img
+                  src={companyLogo}
+                  alt="Company Logo"
+                  className="img-fluid"
+                  style={{
+                    objectFit: "contain",
+                    height: "150px",
+                    borderRadius: "12px",
+                    boxShadow: "0 4px 8px rgba(0,0,0,0.1)",
+                  }}
+                />
               </div>
             </div>
           </div>
         </div>
-
       </div>
     </div>
   );

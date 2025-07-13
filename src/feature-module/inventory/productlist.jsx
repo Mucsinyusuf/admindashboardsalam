@@ -150,7 +150,7 @@ const CustomerOnboarding = () => {
     }}
   >
 
-      <h2>Customer Onboarding Lookup</h2>
+      <h2>Corporate Onboarding Lookup</h2>
 
       <form onSubmit={handleSearch} className="mb-4">
         <div className="row g-3">
