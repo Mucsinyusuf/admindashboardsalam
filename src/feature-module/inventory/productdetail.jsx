@@ -1,115 +1,137 @@
-import React from 'react'
-import ImageWithBasePath from '../../core/img/imagewithbasebath'
+import React from 'react';
+import { DatePicker, Switch } from 'antd';
+import Select from 'react-select';
 
-const ProductDetail = () => {
-    return (
-        <div>
-            <div className="page-wrapper">
-                <div className="content">
-                    <div className="page-header">
-                        <div className="page-title">
-                            <h4>Product Details</h4>
-                            <h6>Full details of a product</h6>
-                        </div>
-                    </div>
-                    {/* /add */}
-                    <div className="row">
-                        <div className="col-lg-8 col-sm-12">
-                            <div className="card">
-                                <div className="card-body">
-                                    <div className="bar-code-view">
-                                        <ImageWithBasePath src="assets/img/barcode/barcode1.png" alt="barcode" />
-                                        <a className="printimg">
-                                            <ImageWithBasePath src="assets/img/icons/printer.svg" alt="print" />
-                                        </a>
-                                    </div>
-                                    <div className="productdetails">
-                                        <ul className="product-bar">
-                                            <li>
-                                                <h4>Product</h4>
-                                                <h6>Macbook pro </h6>
-                                            </li>
-                                            <li>
-                                                <h4>Category</h4>
-                                                <h6>Computers</h6>
-                                            </li>
-                                            <li>
-                                                <h4>Sub Category</h4>
-                                                <h6>None</h6>
-                                            </li>
-                                            <li>
-                                                <h4>Brand</h4>
-                                                <h6>None</h6>
-                                            </li>
-                                            <li>
-                                                <h4>Unit</h4>
-                                                <h6>Piece</h6>
-                                            </li>
-                                            <li>
-                                                <h4>SKU</h4>
-                                                <h6>PT0001</h6>
-                                            </li>
-                                            <li>
-                                                <h4>Minimum Qty</h4>
-                                                <h6>5</h6>
-                                            </li>
-                                            <li>
-                                                <h4>Quantity</h4>
-                                                <h6>50</h6>
-                                            </li>
-                                            <li>
-                                                <h4>Tax</h4>
-                                                <h6>0.00 %</h6>
-                                            </li>
-                                            <li>
-                                                <h4>Discount Type</h4>
-                                                <h6>Percentage</h6>
-                                            </li>
-                                            <li>
-                                                <h4>Price</h4>
-                                                <h6>1500.00</h6>
-                                            </li>
-                                            <li>
-                                                <h4>Status</h4>
-                                                <h6>Active</h6>
-                                            </li>
-                                            <li>
-                                                <h4>Description</h4>
-                                                <h6>
-                                                    Lorem Ipsum is simply dummy text of the printing and
-                                                    typesetting industry. Lorem Ipsum has been the industrys
-                                                    standard dummy text ever since the 1500s,
-                                                </h6>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="col-lg-4 col-sm-12">
-                            <div className="card">
-                                <div className="card-body">
-                                    <div className="slider-product-details">
-                                        <div className="owl-carousel owl-theme product-slide">
-                                            <div className="slider-product">
-                                                <ImageWithBasePath src="assets/img/products/product69.jpg" alt="img" />
-                                                <h4>macbookpro.jpg</h4>
-                                                <h6>581kb</h6>
-                                            </div>
-                                           
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    {/* /add */}
-                </div>
-            </div>
+const ProfileManagement = () => {
+  const riskProfiles = [
+    { value: 'low', label: 'Low' },
+    { value: 'medium', label: 'Medium' },
+    { value: 'high', label: 'High' },
+  ];
 
+  const branches = [
+    { value: 'nairobi-branch', label: 'Nairobi Branch' },
+    { value: 'mombasa-branch', label: 'Mombasa Branch' },
+  ];
 
+  const languages = [
+    { value: 'en', label: 'English' },
+    { value: 'so', label: 'Somali' },
+  ];
+
+  return (
+    <div className="page-wrapper">
+      <div className="content">
+        <div className="page-header">
+          <div className="page-title">
+            <h4>Profile Management</h4>
+            <h6>Manage company profile information</h6>
+          </div>
         </div>
-    )
-}
 
-export default ProductDetail
+        <div className="row">
+          <div className="col-lg-8 col-sm-12">
+            <div className="card">
+              <div className="card-body">
+                <form>
+                  <div className="row">
+                    <div className="col-lg-6 col-sm-12">
+                      <div className="input-blocks">
+                        <label>Company Name</label>
+                        <input type="text" className="form-control" value="ABC Ltd" readOnly />
+                      </div>
+                    </div>
+                    <div className="col-lg-6 col-sm-12">
+                      <div className="input-blocks">
+                        <label>Contact Email</label>
+                        <input type="email" className="form-control" placeholder="contact@company.com" />
+                      </div>
+                    </div>
+                    <div className="col-lg-6 col-sm-12">
+                      <div className="input-blocks">
+                        <label>Contact Number</label>
+                        <input type="text" className="form-control" placeholder="+254..." />
+                      </div>
+                    </div>
+                    <div className="col-lg-6 col-sm-12">
+                      <div className="input-blocks">
+                        <label>Primary Contact Person</label>
+                        <input type="text" className="form-control" placeholder="John Doe" />
+                      </div>
+                    </div>
+                    <div className="col-lg-6 col-sm-12">
+                      <div className="input-blocks">
+                        <label>Risk Profile</label>
+                        <Select options={riskProfiles} placeholder="Select Risk Profile" />
+                      </div>
+                    </div>
+                    <div className="col-lg-6 col-sm-12">
+                      <div className="input-blocks">
+                        <label>Registered Address</label>
+                        <input type="text" className="form-control" placeholder="Address" />
+                      </div>
+                    </div>
+                    <div className="col-lg-6 col-sm-12">
+                      <div className="input-blocks">
+                        <label>Branch Affiliation</label>
+                        <Select options={branches} placeholder="Select Branch" />
+                      </div>
+                    </div>
+                    <div className="col-lg-6 col-sm-12">
+                      <div className="input-blocks d-flex justify-content-between align-items-center">
+                        <label>Active Status</label>
+                        <Switch defaultChecked />
+                      </div>
+                    </div>
+                    <div className="col-lg-12">
+                      <div className="input-blocks">
+                        <label>Linked Bank Accounts</label>
+                        <textarea className="form-control" placeholder="A/C 123456789, A/C 987654321" />
+                      </div>
+                    </div>
+                    <div className="col-lg-6 col-sm-12">
+                      <div className="input-blocks">
+                        <label>Date of Last Update</label>
+                        <DatePicker className="form-control" format="DD-MM-YYYY" />
+                      </div>
+                    </div>
+                    <div className="col-lg-6 col-sm-12">
+                      <div className="input-blocks">
+                        <label>Preferred Language</label>
+                        <Select options={languages} placeholder="Select Language" />
+                      </div>
+                    </div>
+                    <div className="col-lg-12">
+                      <div className="input-blocks">
+                        <label>Remarks</label>
+                        <textarea className="form-control" placeholder="Admin notes or update history..." />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="text-end mt-3">
+                    <button type="submit" className="btn btn-submit me-2">Save</button>
+                    <button type="reset" className="btn btn-cancel">Cancel</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+
+          {/* Optional sidebar for image or status */}
+          <div className="col-lg-4 col-sm-12">
+            <div className="card">
+              <div className="card-body text-center">
+                <img src="assets/img/company/company-logo.png" alt="Company Logo" width={100} />
+                <p className="mt-2">Company Logo</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  );
+};
+
+export default ProfileManagement;

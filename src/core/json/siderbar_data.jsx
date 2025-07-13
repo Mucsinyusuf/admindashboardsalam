@@ -39,7 +39,8 @@ export const SidebarData = [
           { label: "Company KYC Documents", link: "/add-product", icon:  <Icon.PlusSquare />,showSubRoute: false, submenu: false },
           { label: "Company User Mapping", link: "/expired-products", icon:  <Icon.Codesandbox  />,showSubRoute: false,submenu: false },
           { label: "Company Access Rights", link: "/low-stocks", icon: <Icon.TrendingDown  />,showSubRoute: false,submenu: false },
-          { label: "Profile Management",icon:  <Icon.UserCheck />, link: "/general-settings" },
+          { label: "Profile Management",icon:  <Icon.UserCheck />, link: "/product-details" },
+          { label: "Company Signatories",icon:  <Icon.UserCheck />, link: "/qrcode"},
         ]
       },
       {

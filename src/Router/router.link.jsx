@@ -1,8 +1,8 @@
 import React from "react";
 import { Route, Navigate } from "react-router-dom";
-import ProductList from "../feature-module/inventory/productlist";
+import CustomerOnboarding from "../feature-module/inventory/productlist";
 import Dashboard from "../feature-module/dashboard/Dashboard";
-import AddProduct from "../feature-module/inventory/addproduct";
+import KYCForm from "../feature-module/inventory/addproduct";
 import SalesDashbaord from "../feature-module/dashboard/Salesdashboard";
 import BrandList from "../feature-module/inventory/brandlist";
 import VariantAttributes from "../feature-module/inventory/variantattributes";
@@ -88,8 +88,8 @@ import ExpensesList from "../feature-module/FinanceAccounts/ExpensesList";
 import ExpenseCategory from "../feature-module/FinanceAccounts/ExpenseCategory";
 import Calendar from "../feature-module/Application/calendar";
 import FormWizard from "../feature-module/uiinterface/forms/formelements/form-wizard";
-import ExpiredProduct from "../feature-module/inventory/expiredproduct";
-import LowStock from "../feature-module/inventory/lowstock";
+import CompanyUserMapping from "../feature-module/inventory/expiredproduct";
+import AccessRights from "../feature-module/inventory/lowstock";
 import CategoryList from "../feature-module/inventory/categorylist";
 import SubCategories from "../feature-module/inventory/subcategories";
 import EditProduct from "../feature-module/inventory/editproduct";
@@ -98,7 +98,7 @@ import Audiocall from "../feature-module/Application/audiocall";
 import Email from "../feature-module/Application/email";
 import Callhistory from "../feature-module/Application/callhistory";
 import ToDo from "../feature-module/Application/todo";
-import QRcode from "../feature-module/inventory/qrcode";
+import CompanySignatories from "../feature-module/inventory/qrcode";
 import PurchasesList from "../feature-module/purchases/purchaseslist";
 import PurchaseOrderReport from "../feature-module/purchases/purchaseorderreport";
 import PurchaseReturns from "../feature-module/purchases/purchasereturns";
@@ -187,7 +187,7 @@ import AddEmployee from "../feature-module/hrm/addemployee";
 import LeavesAdmin from "../feature-module/hrm/leavesadmin";
 import LeavesEmployee from "../feature-module/hrm/leavesemployee";
 import LeaveTypes from "../feature-module/hrm/leavetypes";
-import ProductDetail from "../feature-module/inventory/productdetail";
+import ProfileManagement from "../feature-module/inventory/productdetail";
 import { Units } from "../feature-module/inventory/units";
 import TaxRates from "../feature-module/settings/financialsettings/taxrates";
 import CurrencySettings from "../feature-module/settings/financialsettings/currencysettings";
@@ -206,14 +206,14 @@ export const publicRoutes = [
     id: 2,
     path: routes.productlist,
     name: "products",
-    element: <ProductList />,
+    element: <CustomerOnboarding/>,
     route: Route,
   },
   {
     id: 3,
     path: routes.addproduct,
     name: "products",
-    element: <AddProduct />,
+    element: <KYCForm />,
     route: Route,
   },
   {
@@ -787,14 +787,14 @@ export const publicRoutes = [
     id: 58,
     path: routes.expiredproduct,
     name: "expiredproduct",
-    element: <ExpiredProduct />,
+    element: <CompanyUserMapping />,
     route: Route,
   },
   {
     id: 59,
     path: routes.lowstock,
     name: "lowstock",
-    element: <LowStock />,
+    element: <AccessRights/>,
     route: Route,
   },
   {
@@ -886,7 +886,7 @@ export const publicRoutes = [
     id: 67,
     path: routes.qrcode,
     name: "qrcode",
-    element: <QRcode />,
+    element: <CompanySignatories/>,
     route: Route,
   },
   {
@@ -1362,7 +1362,7 @@ export const publicRoutes = [
     id: 113,
     path: routes.productdetails,
     name: "productdetails",
-    element: <ProductDetail />,
+    element: <ProfileManagement/>,
     route: Route,
   },
   {

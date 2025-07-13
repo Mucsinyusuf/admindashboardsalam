@@ -137,7 +137,19 @@ const CustomerOnboarding = () => {
   };
 
   return (
-    <div className="container mt-4">
+    <div
+    style={{
+      marginTop: "60px",
+      marginLeft: "auto",
+      marginRight: "auto",
+      padding: "30px",
+      maxWidth: "1100px",
+      backgroundColor: "#f9f9f9",
+      borderRadius: "10px",
+      boxShadow: "0 4px 12px rgba(0, 0, 0, 0.05)",
+    }}
+  >
+
       <h2>Customer Onboarding Lookup</h2>
 
       <form onSubmit={handleSearch} className="mb-4">
