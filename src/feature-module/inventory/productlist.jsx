@@ -185,7 +185,6 @@ const CustomerOnboarding = () => {
         return;
       }
 
-      // Reset all fields after success
       setBranch("");
       setAccountNumber("");
       setAccountData(null);
@@ -229,29 +228,38 @@ const CustomerOnboarding = () => {
         <>
           <Card sx={{ mb: 3 }}>
             <CardContent>
-              <Typography variant="h6">Account Lookup Result</Typography>
-              <ul>
-                {Object.entries({
-                  "Account Number": accountData.account_number,
-                  "Account Name": accountData.account_name,
-                  "Customer No": accountData.custno,
-                  Branch: accountData.brn,
-                  Owners: accountData.owners?.join(", "),
-                  Directors: accountData.directors?.join(", "),
-                  "Customer Name (Details)": accountData.details?.cust_name,
-                  Address: [
-                    accountData.details?.address_1,
-                    accountData.details?.address_2,
-                    accountData.details?.address_3,
-                    accountData.details?.address_4,
-                  ].filter(Boolean).join(", "),
-                  "Account Status": accountData.details?.accstat,
-                  "Account Type": accountData.details?.acctype,
-                  "Account Open Date": accountData.details?.accopendt,
-                }).map(([key, val]) => (
-                  <li key={key}><strong>{key}:</strong> {val}</li>
-                ))}
-              </ul>
+              <Typography variant="h6" gutterBottom>
+                Account Lookup Result
+              </Typography>
+              <Table size="small">
+                <TableBody>
+                  {Object.entries({
+                    "Account Number": accountData.account_number,
+                    "Account Name": accountData.account_name,
+                    "Customer No": accountData.custno,
+                    Branch: accountData.brn,
+                    Owners: accountData.owners?.join(", "),
+                    Directors: accountData.directors?.join(", "),
+                    "Customer Name (Details)": accountData.details?.cust_name,
+                    Address: [
+                      accountData.details?.address_1,
+                      accountData.details?.address_2,
+                      accountData.details?.address_3,
+                      accountData.details?.address_4,
+                    ]
+                      .filter(Boolean)
+                      .join(", "),
+                    "Account Status": accountData.details?.accstat,
+                    "Account Type": accountData.details?.acctype,
+                    "Account Open Date": accountData.details?.accopendt,
+                  }).map(([key, val]) => (
+                    <TableRow key={key}>
+                      <TableCell sx={{ fontWeight: "bold", width: "30%" }}>{key}</TableCell>
+                      <TableCell>{val || "-"}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
             </CardContent>
           </Card>
 
@@ -266,7 +274,6 @@ const CustomerOnboarding = () => {
             <Button variant="outlined" onClick={handleSetLimit} sx={{ borderRadius: 2 }}>
               Set Limit
             </Button>
-
             {limitLocked && (
               <Button variant="text" color="secondary" size="small" onClick={() => setLimitLocked(false)}>
                 Edit Per-User Limits
@@ -297,7 +304,15 @@ const CustomerOnboarding = () => {
                       <TableCell><TextField fullWidth type="password" value={u.password} onChange={(e) => handleUserChange(idx, "password", e.target.value)} /></TableCell>
                       <TableCell><TextField fullWidth value={u.phone} onChange={(e) => handleUserChange(idx, "phone", e.target.value)} /></TableCell>
                       <TableCell><TextField fullWidth value={u.email} onChange={(e) => handleUserChange(idx, "email", e.target.value)} /></TableCell>
-                      <TableCell><TextField fullWidth type="number" value={u.daily_limit} onChange={(e) => handleUserChange(idx, "daily_limit", e.target.value)} InputProps={{ readOnly: limitLocked }} /></TableCell>
+                      <TableCell>
+                        <TextField
+                          fullWidth
+                          type="number"
+                          value={u.daily_limit}
+                          onChange={(e) => handleUserChange(idx, "daily_limit", e.target.value)}
+                          InputProps={{ readOnly: limitLocked }}
+                        />
+                      </TableCell>
                       <TableCell>
                         <FormControl fullWidth>
                           <InputLabel>Role</InputLabel>

@@ -7,26 +7,28 @@ import companyLogo from "../../assets/img/company/company-logo.png";
 
 const Header = () => {
   const route = all_routes;
-  const [toggle, setToggle] = useState(false);
+  const [isMiniSidebar, setIsMiniSidebar] = useState(false);
+
+  // Update sidebar state when body class changes
+  const updateSidebarState = () => {
+    setIsMiniSidebar(document.body.classList.contains("mini-sidebar"));
+  };
 
   useEffect(() => {
-    const handleMouseover = (e) => {
-      const body = document.body;
-      const toggleBtn = document.getElementById("toggle_btn");
+    updateSidebarState();
 
+    const handleMouseover = (e) => {
+      const toggleBtn = document.getElementById("toggle_btn");
       if (
-        body.classList.contains("mini-sidebar") &&
+        document.body.classList.contains("mini-sidebar") &&
         toggleBtn?.offsetParent !== null
       ) {
-        const target = e.target.closest(".sidebar, .header-left");
-
-        if (target) {
-          body.classList.add("expand-menu");
+        const isHoveringSidebar = e.target.closest(".sidebar, .header-left");
+        if (isHoveringSidebar) {
+          document.body.classList.add("expand-menu");
         } else {
-          body.classList.remove("expand-menu");
+          document.body.classList.remove("expand-menu");
         }
-
-        e.preventDefault();
       }
     };
 
@@ -34,70 +36,55 @@ const Header = () => {
     return () => document.removeEventListener("mouseover", handleMouseover);
   }, []);
 
-  const handleSidebar = () => {
+  const handleSidebarToggle = () => {
     document.body.classList.toggle("mini-sidebar");
-    setToggle((prev) => !prev);
+    updateSidebarState();
   };
 
-  const sidebarOverlay = () => {
-    document.querySelector(".main-wrapper")?.classList?.toggle("slide-nav");
-    document.querySelector(".sidebar-overlay")?.classList?.toggle("opened");
-    document.querySelector("html")?.classList?.toggle("menu-opened");
+  const handleMobileSidebar = () => {
+    document.querySelector(".main-wrapper")?.classList.toggle("slide-nav");
+    document.querySelector(".sidebar-overlay")?.classList.toggle("opened");
+    document.querySelector("html")?.classList.toggle("menu-opened");
   };
 
   const pathname = window.location.pathname;
+  const shouldHideHeader =
+    ["/reactjs/template/dream-pos/index-three", "/reactjs/template/dream-pos/index-one"].includes(pathname);
 
-  if (
-    ["/reactjs/template/dream-pos/index-three", "/reactjs/template/dream-pos/index-one"].includes(pathname)
-  ) return null;
+  if (shouldHideHeader) return null;
 
   return (
     <div className="header">
       {/* Sidebar Logo */}
       <div
-        className={`header-left ${toggle ? "" : "active"}`}
+        className={`header-left ${isMiniSidebar ? "" : "active"}`}
         onMouseLeave={() => document.body.classList.remove("expand-menu")}
         onMouseOver={() => document.body.classList.add("expand-menu")}
       >
-        <Link to="/dashboard" className="logo logo-normal">
+        <Link to="/dashboard" className="logo">
           <img
             src={companyLogo}
             alt="Company Logo"
-            style={{ height: "40px", objectFit: "contain" }}
-          />
-        </Link>
-        <Link to="/dashboard" className="logo logo-white">
-          <img
-            src={companyLogo}
-            alt="Company Logo"
-            style={{ height: "40px", objectFit: "contain" }}
-          />
-        </Link>
-        <Link to="/dashboard" className="logo logo-small">
-          <img
-            src={companyLogo}
-            alt="Company Logo"
-            style={{ height: "30px", objectFit: "contain" }}
+            style={{
+              height: isMiniSidebar ? "30px" : "40px",
+              objectFit: "contain",
+            }}
           />
         </Link>
         <Link
           id="toggle_btn"
           to="#"
+          onClick={handleSidebarToggle}
           style={{
             display: pathname.includes("tasks") || pathname.includes("compose") ? "none" : "",
           }}
-          onClick={handleSidebar}
         >
           <FeatherIcon icon="chevrons-left" className="feather-16" />
         </Link>
       </div>
 
-      <Link
-        id="mobile_btn"
-        className="mobile_btn"
-        to="#"
-        onClick={sidebarOverlay}
-      >
+      {/* Mobile Toggle */}
+      <Link id="mobile_btn" className="mobile_btn" to="#" onClick={handleMobileSidebar}>
         <span className="bar-icon">
           <span />
           <span />
@@ -127,14 +114,10 @@ const Header = () => {
                   </span>
                 </div>
               </div>
-              <div
-                className="dropdown-menu search-dropdown"
-                aria-labelledby="dropdownMenuClickable"
-              >
+              <div className="dropdown-menu search-dropdown" aria-labelledby="dropdownMenuClickable">
                 <div className="search-info">
                   <h6>
-                    <i data-feather="search" className="feather-16" /> Recent
-                    Searches
+                    <i data-feather="search" className="feather-16" /> Recent Searches
                   </h6>
                   <ul className="search-tags">
                     <li><Link to="#">Products</Link></li>
@@ -147,7 +130,7 @@ const Header = () => {
           </div>
         </li>
 
-        {/* Select Branch */}
+        {/* Branch Selector */}
         <li className="nav-item dropdown has-arrow main-drop select-store-dropdown">
           <Link
             to="#"

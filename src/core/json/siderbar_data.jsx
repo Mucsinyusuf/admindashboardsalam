@@ -29,12 +29,13 @@ export const SidebarData = [
     showSubRoute: false,
     submenuHdr: "Client & Company Management",
     submenuItems: [
-      { label: "Corporate Onboarding", link: "/corporate-onboarding", icon: <Icon.Briefcase /> },
+      
       { label: "Company KYC Documents", link: "/company-KYC", icon: <Icon.FileText /> },
       { label: "Company User Mapping", link: "/company-user-mapping", icon: <Icon.Users /> },
       { label: "Company Access Rights", link: "/company-access-rights", icon: <Icon.Lock /> },
       { label: "Profile Management", link: "/profile-management", icon: <Icon.UserCheck /> },
       { label: "Company Signatories", link: "/companysignatories", icon: <Icon.UserPlus /> },
+      { label: "Corporate Onboarding", link: "/corporate-onboarding", icon: <Icon.Briefcase /> }
     ],
   },
   {
