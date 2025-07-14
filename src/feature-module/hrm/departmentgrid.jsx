@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import ImageWithBasePath from "../../core/img/imagewithbasebath";
 import { Link } from "react-router-dom/dist";
-import { all_routes } from "../../Router/all_routes";
+import { all_routes } from "../../Router_Backup/all_routes";
 import {
   Edit,
   FileText,

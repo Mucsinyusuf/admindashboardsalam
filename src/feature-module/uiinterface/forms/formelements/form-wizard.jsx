@@ -1,7 +1,7 @@
 /* eslint-disable react/no-unknown-property */
 import React from "react";
 import { Link } from "react-router-dom";
-import { all_routes } from "../../../../Router/all_routes";
+import { all_routes } from "../../../../Router_Backup/all_routes";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
 
 const FormWizard = () => {

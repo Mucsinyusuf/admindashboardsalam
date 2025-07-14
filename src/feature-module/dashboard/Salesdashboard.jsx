@@ -16,7 +16,7 @@ import { Link } from "react-router-dom";
 import { setToogleHeader } from "../../core/redux/action";
 import { useDispatch, useSelector } from "react-redux";
 import { Tooltip } from "react-bootstrap";
-import { all_routes } from "../../Router/all_routes";
+import { all_routes } from "../../Router_Backup/all_routes";
 const SalesDashbaord = () => {
   const route = all_routes;
   //const data = useSelector((state) => state.saleshdashboard_recenttransaction);

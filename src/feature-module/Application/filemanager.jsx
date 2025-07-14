@@ -27,7 +27,7 @@ import {
   Target,
   Trash2,
 } from "react-feather";
-import { all_routes } from "../../Router/all_routes";
+import { all_routes } from "../../Router_Backup/all_routes";
 
 const FileManager = () => {
   const route = all_routes;

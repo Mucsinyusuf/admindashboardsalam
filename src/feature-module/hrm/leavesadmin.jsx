@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Filter, Layout, Sliders } from "react-feather";
 import { Select, Tag } from "antd";
 import Table from "../../core/pagination/datatable";
-import { all_routes } from "../../Router/all_routes";
+import { all_routes } from "../../Router_Backup/all_routes";
 
 const LeavesAdmin = () => {
   const route = all_routes;

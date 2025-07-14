@@ -1,6 +1,6 @@
 import React from "react";
 import ImageWithBasePath from "../../../core/img/imagewithbasebath";
-import { all_routes } from "../../../Router/all_routes";
+import { all_routes } from "../../../Router_Backup/all_routes";
 import { Link } from "react-router-dom";
 
 const EmailverificationTwo = () => {

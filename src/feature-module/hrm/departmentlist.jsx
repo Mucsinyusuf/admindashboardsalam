@@ -14,7 +14,7 @@ import {
   Users,
 } from "feather-icons-react/build/IconComponents";
 import Select from "react-select";
-import { all_routes } from "../../Router/all_routes";
+import { all_routes } from "../../Router_Backup/all_routes";
 import { useSelector } from "react-redux";
 import Table from "../../core/pagination/datatable";
 import AddDepartmentList from "../../core/modals/hrm/adddepartmentlist";

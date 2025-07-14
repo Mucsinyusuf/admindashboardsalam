@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { all_routes } from "../../../Router/all_routes";
+import { all_routes } from "../../../Router_Backup/all_routes";
 
 const AddCategory = () => {
   const route = all_routes;

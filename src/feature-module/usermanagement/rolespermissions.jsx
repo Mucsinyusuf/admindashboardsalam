@@ -13,7 +13,7 @@ import Swal from "sweetalert2";
 import Table from "../../core/pagination/datatable";
 import AddRole from "../../core/modals/usermanagement/addrole";
 import EditRole from "../../core/modals/usermanagement/editrole";
-import { all_routes } from "../../Router/all_routes";
+import { all_routes } from "../../Router_Backup/all_routes";
 // import { all_routes } from "../../Router/all_routes";
 
 const RolesPermissions = () => {

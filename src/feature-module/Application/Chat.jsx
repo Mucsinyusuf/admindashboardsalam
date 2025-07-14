@@ -4,7 +4,7 @@ import "boxicons/css/boxicons.css";
 import "boxicons/css/boxicons.min.css";
 import { Link } from "react-router-dom";
 import ImageWithBasePath from "../../core/img/imagewithbasebath";
-import { all_routes } from "../../Router/all_routes";
+import { all_routes } from "../../Router_Backup/all_routes";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
 
 const Chat = () => {
