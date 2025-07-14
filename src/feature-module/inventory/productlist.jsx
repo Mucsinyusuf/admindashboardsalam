@@ -30,7 +30,7 @@ const CustomerOnboarding = () => {
         headers: {
           "Content-Type": "application/json",
           Authorization:
-            "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X251bWJlciI6IiIsImJyYW5jaF9jb2RlIjoiIiwiY2lmIjoiIiwiZXhwIjoxNzUyMjM3MjM5LCJwaG9uZV9udW1iZXIiOiIyNTQ3NDUxOTI5MTMiLCJyb2xlX2lkIjpbMV0sInVzZXJfaWQiOjEsInVzZXJfdHlwZSI6ImFkbWluIiwidXNlcm5hbWUiOiJhZG1pbiJ9.HVQzJXvAOkRRDoc90DF8G4jEcaiPhPJKN17o3l-sRz8",
+            "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X251bWJlciI6IiIsImJyYW5jaF9jb2RlIjoiIiwiY2lmIjoiIiwiZXhwIjoxNzUyNDc5NDMzLCJwaG9uZV9udW1iZXIiOiIyNTQ3NDUxOTI5MTMiLCJyb2xlX2lkIjpbMV0sInVzZXJfaWQiOjEsInVzZXJfdHlwZSI6ImFkbWluIiwidXNlcm5hbWUiOiJhZG1pbiJ9.P1CI1QoHuilo-ngXkS9HpitgxmL6nJ9RE_jf7q7fYEw",
         },
         body: JSON.stringify({
           branch: branch,
@@ -102,7 +102,7 @@ const CustomerOnboarding = () => {
         headers: {
           "Content-Type": "application/json",
           Authorization:
-            "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X251bWJlciI6IiIsImJyYW5jaF9jb2RlIjoiIiwiY2lmIjoiIiwiZXhwIjoxNzUyMjM3MjM5LCJwaG9uZV9udW1iZXIiOiIyNTQ3NDUxOTI5MTMiLCJyb2xlX2lkIjpbMV0sInVzZXJfaWQiOjEsInVzZXJfdHlwZSI6ImFkbWluIiwidXNlcm5hbWUiOiJhZG1pbiJ9.HVQzJXvAOkRRDoc90DF8G4jEcaiPhPJKN17o3l-sRz8",
+            "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X251bWJlciI6IiIsImJyYW5jaF9jb2RlIjoiIiwiY2lmIjoiIiwiZXhwIjoxNzUyNDc5NDMzLCJwaG9uZV9udW1iZXIiOiIyNTQ3NDUxOTI5MTMiLCJyb2xlX2lkIjpbMV0sInVzZXJfaWQiOjEsInVzZXJfdHlwZSI6ImFkbWluIiwidXNlcm5hbWUiOiJhZG1pbiJ9.P1CI1QoHuilo-ngXkS9HpitgxmL6nJ9RE_jf7q7fYEw",
         },
         body: JSON.stringify(payload),
       });
@@ -355,9 +355,10 @@ const CustomerOnboarding = () => {
                   ))}
                 </tbody>
               </table>
+              <br/>
 
               <button
-                className="btn btn-success"
+                className="btn btn-primary"
                 onClick={handleSubmitOnboarding}
               >
                 Submit Onboarding

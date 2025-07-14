@@ -1,7 +1,6 @@
 import React from 'react';
 import { DatePicker, Switch } from 'antd';
 import Select from 'react-select';
-import companyLogo from '../../assets/img/company/company-logo.png';
 
 const ProfileManagement = () => {
   const riskProfiles = [
@@ -30,9 +29,9 @@ const ProfileManagement = () => {
           </div>
         </div>
 
+        {/* Full width form */}
         <div className="row g-4">
-          {/* Form Section */}
-          <div className="col-lg-8 col-sm-12">
+          <div className="col-12">
             <div className="card shadow-sm border-0">
               <div className="card-body">
                 <form>
@@ -127,25 +126,6 @@ const ProfileManagement = () => {
                     <button type="reset" className="btn btn-secondary">Cancel</button>
                   </div>
                 </form>
-              </div>
-            </div>
-          </div>
-
-          {/* Logo Section */}
-          <div className="col-lg-4 col-sm-12">
-            <div className="card shadow-sm border-0">
-              <div className="card-body text-center d-flex justify-content-center align-items-center" style={{ height: "100%" }}>
-                <img
-                  src={companyLogo}
-                  alt="Company Logo"
-                  className="img-fluid"
-                  style={{
-                    objectFit: "contain",
-                    height: "150px",
-                    borderRadius: "12px",
-                    boxShadow: "0 4px 8px rgba(0,0,0,0.1)",
-                  }}
-                />
               </div>
             </div>
           </div>

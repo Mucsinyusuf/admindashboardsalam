@@ -79,7 +79,7 @@ const Signin = () => {
         <form onSubmit={handleLogin}>
           <div className="text-center mb-4">
             <h3>Sign In</h3>
-            <p>Access the Dreamspos panel using your email and passcode.</p>
+            <p>Access the Salaam Admin Dashboard.</p>
           </div>
           <div className="mb-3">
             <label className="form-label">Username</label>
