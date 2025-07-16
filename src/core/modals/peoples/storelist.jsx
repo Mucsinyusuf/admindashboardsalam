@@ -145,7 +145,7 @@ const StoreList = () => {
     });
   };
   return (
-    <div className="page-wrapper">
+    <div className="row">
       <div className="content">
         <Breadcrumbs
           maintitle="Store List"

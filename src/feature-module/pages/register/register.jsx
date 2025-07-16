@@ -6,7 +6,7 @@ import { all_routes } from "../../../Router_Backup/all_routes";
 const Register = () => {
   const route = all_routes;
   return (
-    <div className="main-wrapper">
+    <div className="row">
       <div className="account-content">
         <div className="login-wrapper register-wrap bg-img">
           <div className="login-content">

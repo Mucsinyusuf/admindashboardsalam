@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import {
-  Container,
   Typography,
   TextField,
   Button,
@@ -21,9 +20,11 @@ import {
   TableBody,
   Box,
 } from "@mui/material";
-import { token } from "../../utils/token";
+import { useAuth } from "../../context/AuthContext";
 
 const CustomerOnboarding = () => {
+  const { token } = useAuth();
+
   const [branch, setBranch] = useState("");
   const [accountNumber, setAccountNumber] = useState("");
   const [loading, setLoading] = useState(false);
@@ -37,9 +38,10 @@ const CustomerOnboarding = () => {
 
   useEffect(() => {
     const fetchRoles = async () => {
+      if (!token) return;
       try {
         const res = await fetch("/api/admin/roles", {
-          headers: { Authorization: token },
+          headers: { Authorization: `Bearer ${token}` },
         });
         const roles = await res.json();
         const formatted = roles.map((r) => ({
@@ -52,7 +54,7 @@ const CustomerOnboarding = () => {
       }
     };
     fetchRoles();
-  }, []);
+  }, [token]);
 
   const handleSnack = (message, severity = "success") => {
     setSnack({ open: true, message, severity });
@@ -71,7 +73,7 @@ const CustomerOnboarding = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: token,
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({ branch, account_number: accountNumber }),
       });
@@ -85,7 +87,6 @@ const CustomerOnboarding = () => {
       }
 
       setAccountData(data);
-
       const directors = data.directors || [];
       const preparedUsers = directors.map((name) => ({
         full_name: name,
@@ -97,7 +98,6 @@ const CustomerOnboarding = () => {
         role: "",
         role_id: "",
       }));
-
       setUsers(preparedUsers);
     } catch (err) {
       console.error(err);
@@ -124,7 +124,7 @@ const CustomerOnboarding = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: token,
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           account_number: accountData.account_number,
@@ -174,7 +174,7 @@ const CustomerOnboarding = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: token,
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(payload),
       });
@@ -201,7 +201,7 @@ const CustomerOnboarding = () => {
   };
 
   return (
-    <Container maxWidth="lg" sx={{ mt: 10 }}>
+    <div className="row" style={{ marginTop: "40px", padding: "0 20px" }}>
       <Typography variant="h5" gutterBottom>
         Corporate Onboarding Lookup
       </Typography>
@@ -246,9 +246,7 @@ const CustomerOnboarding = () => {
                       accountData.details?.address_2,
                       accountData.details?.address_3,
                       accountData.details?.address_4,
-                    ]
-                      .filter(Boolean)
-                      .join(", "),
+                    ].filter(Boolean).join(", "),
                     "Account Status": accountData.details?.accstat,
                     "Account Type": accountData.details?.acctype,
                     "Account Open Date": accountData.details?.accopendt,
@@ -356,7 +354,7 @@ const CustomerOnboarding = () => {
           {snack.message}
         </Alert>
       </Snackbar>
-    </Container>
+    </div>
   );
 };
 

@@ -17,7 +17,7 @@ import { setToogleHeader } from "../../core/redux/action";
 import { useDispatch, useSelector } from "react-redux";
 import { Tooltip } from "react-bootstrap";
 import { all_routes } from "../../Router_Backup/all_routes";
-const SalesDashbaord = () => {
+const  TransactionAnalytics = () => {
   const route = all_routes;
   //const data = useSelector((state) => state.saleshdashboard_recenttransaction);
   const dispatch = useDispatch();
@@ -124,7 +124,7 @@ const SalesDashbaord = () => {
 
   return (
     <>
-      <div className="page-wrapper">
+      <div className="row">
         <div className="content">
           <div className="welcome d-lg-flex align-items-center justify-content-between">
             <div className="d-flex align-items-center welcome-text">
@@ -705,4 +705,4 @@ const SalesDashbaord = () => {
   );
 };
 
-export default SalesDashbaord;
+export default  TransactionAnalytics;

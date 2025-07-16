@@ -14,11 +14,11 @@ export const SidebarData = [
         submenu: true,
         showSubRoute: false,
         submenuItems: [
-          { label: "Overview", link: "/" },
-          { label: "Transaction Analytics", link: "/sales-dashboard" },
-          { label: "Compliance Alerts", link: "/sales-dashboard" },
-          { label: "Risk Heatmap", link: "/sales-dashboard" },
-          { label: "System Health", link: "/" },
+          { label: "Overview", link: "/overview" },
+          { label: "Transaction Analytics", link: "/transaction-analytics" },
+          { label: "Compliance Alerts", link: "/compliance" },
+          { label: "Risk Heatmap", link: "/heatmap" },
+          { label: "System Health", link: "/system-health" },
         ],
       },
     ],
@@ -29,7 +29,6 @@ export const SidebarData = [
     showSubRoute: false,
     submenuHdr: "Client & Company Management",
     submenuItems: [
-      
       { label: "Company KYC Documents", link: "/company-KYC", icon: <Icon.FileText /> },
       { label: "Company User Mapping", link: "/company-user-mapping", icon: <Icon.Users /> },
       { label: "Company Access Rights", link: "/company-access-rights", icon: <Icon.Lock /> },

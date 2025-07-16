@@ -31,7 +31,7 @@ const KYCForm = () => {
   ];
 
   return (
-    <div className="page-wrapper">
+    <div className="row">
       <div className="content">
         <div className="page-header">
           <h4>Company KYC Documents</h4>

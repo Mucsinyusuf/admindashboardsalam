@@ -109,7 +109,7 @@ const PurchasesList = () => {
 
     return (
         <div>
-            <div className="page-wrapper">
+            <div className="row">
                 <div className="content">
                     <div className="page-header transfer">
                         <div className="add-item d-flex">
