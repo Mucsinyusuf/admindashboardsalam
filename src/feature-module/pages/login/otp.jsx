@@ -1,112 +1,169 @@
-// import React, { useState, useEffect } from "react";
-// import { useNavigate } from "react-router-dom";
-// import { all_routes } from "../../../Router/all_routes";
-// import { useAuth } from "../../../context/AuthContext";
-// import Cookies from "js-cookie";
+import React, { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
+import { useAuth } from "../../../context/AuthContext";
+import {
+  TextField,
+  Button,
+  Alert,
+  Typography,
+} from "@mui/material";
+import { motion } from "framer-motion";
+import bgImage from "../../../assets/img/company/AdminDashboardBackground@2x.png";
 
-// const OTPVerify = () => {
-//   const navigate = useNavigate();
-//   const { login } = useAuth();
+const OTPVerify = () => {
+  const [otp, setOtp] = useState("");
+  const [username, setUsername] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const { login } = useAuth();
+  const navigate = useNavigate();
+  const inputRef = useRef(null);
 
-//   const [otp, setOtp] = useState("");
-//   const [username, setUsername] = useState("");
-//   const [loading, setLoading] = useState(false);
-//   const [error, setError] = useState("");
+  useEffect(() => {
+    const raw = Cookies.get("pendingLogin");
+    try {
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        if (parsed?.username) {
+          setUsername(parsed.username);
+          return;
+        }
+      }
+    } catch (err) {
+      console.error("Cookie parse error", err);
+    }
+    navigate("/signin");
+  }, [navigate]);
 
-//   // ✅ On mount, fetch pendingLogin from cookie
-//   useEffect(() => {
-//     try {
-//       const pendingRaw = Cookies.get("pendingLogin");
-//       if (pendingRaw) {
-//         const pending = JSON.parse(pendingRaw);
-//         if (pending?.username) {
-//           setUsername(pending.username);
-//           return;
-//         }
-//       }
-//     } catch (err) {
-//       console.error("Error reading pendingLogin cookie:", err);
-//     }
-//     navigate(all_routes.signin);
-//   }, [navigate]);
+  useEffect(() => {
+    inputRef.current?.focus(); // Automatically focus OTP field
+  }, []);
 
-//   const handleVerify = async (e) => {
-//     e.preventDefault();
-//     setLoading(true);
-//     setError("");
+  const handleVerify = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError("");
 
-//     try {
-//       const res = await fetch("/auth/verify-otp", {
-//         method: "POST",
-//         headers: {
-//           "Content-Type": "application/json",
-//         },
-//         body: JSON.stringify({
-//           username,
-//           otp,
-//         }),
-//       });
+    try {
+      const res = await fetch("/auth/verify-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, otp }),
+      });
 
-//       const data = await res.json();
+      const data = await res.json();
+      const payload = data?.payload;
 
-//       if (!res.ok || data.payload?.replyCode !== 200) {
-//         const message =
-//           data.payload?.replyMessage || "OTP verification failed.";
-//         throw new Error(message);
-//       }
+      if (!res.ok || payload?.replyCode !== 200) {
+        throw new Error(payload?.replyMessage || "OTP verification failed");
+      }
 
-//       const { token, tokenExpiry } = data.payload;
+      const { token, tokenExpiry } = payload;
+      login(token, tokenExpiry, { username });
+      Cookies.remove("pendingLogin");
 
-//       if (!token) {
-//         throw new Error("Token missing in OTP verification response.");
-//       }
+      navigate("/overview");
+    } catch (err) {
+      console.error("OTP Error:", err);
+      setError(err.message || "OTP verification failed.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
-//       // ✅ Save token to AuthContext and cookies
-//       login(token, tokenExpiry, { username });
+  return (
+    <div
+      className="d-flex align-items-center justify-content-center vh-100"
+      style={{
+        backgroundImage: `url(${bgImage})`,
+        backgroundSize: "cover",
+        backgroundRepeat: "no-repeat",
+        backgroundPosition: "center bottom",
+        overflow: "hidden",
+      }}
+    >
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+        style={{
+          width: "100%",
+          maxWidth: "440px",
+          minHeight: "500px",
+          padding: "50px 40px",
+          borderRadius: "24px",
+          backdropFilter: "blur(12px)",
+          backgroundColor: "rgba(255, 255, 255, 0.08)",
+          boxShadow: "0 10px 40px rgba(0, 0, 0, 0.3)",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+        }}
+      >
+        <Typography
+          variant="h5"
+          align="center"
+          gutterBottom
+          style={{ color: "#212121", fontWeight: "bold" }}
+        >
+          OTP Verification
+        </Typography>
 
-//       // Remove pendingLogin cookie
-//       Cookies.remove("pendingLogin");
+        <Typography
+          align="center"
+          variant="body1"
+          gutterBottom
+          style={{ color: "#444", marginBottom: "20px" }}
+        >
+          Enter the OTP sent to your email or phone
+        </Typography>
 
-//       navigate(all_routes.dashboard);
-//     } catch (err) {
-//       console.error(err);
-//       setError(err.message || "OTP verification failed.");
-//     } finally {
-//       setLoading(false);
-//     }
-//   };
+        <form onSubmit={handleVerify}>
+          <TextField
+            inputRef={inputRef}
+            label="Enter OTP"
+            variant="outlined"
+            fullWidth
+            margin="normal"
+            type="password"
+            value={otp}
+            onChange={(e) => setOtp(e.target.value)}
+            required
+           InputProps={{
+    style: {
+      color: "#212121",
+      fontSize: "35px",       
+      fontWeight: "bold",     
+      letterSpacing: "8px",   
+    },
+  }}
+  InputLabelProps={{
+    style: { color: "#666" },
+  }}
+/>
 
-//   return (
-//     <div className="main-wrapper">
-//       <div className="account-content">
-//         <div className="login-wrapper bg-img">
-//           <div className="login-content">
-//             <form onSubmit={handleVerify}>
-//               <h3>OTP Verification</h3>
-//               <p>Enter the code sent to your phone</p>
-//               <input
-//                 type="text"
-//                 className="form-control"
-//                 value={otp}
-//                 onChange={(e) => setOtp(e.target.value)}
-//                 required
-//               />
-//               {error && (
-//                 <div className="alert alert-danger mt-2">{error}</div>
-//               )}
-//               <button
-//                 type="submit"
-//                 className="btn btn-login w-100 mt-3"
-//                 disabled={loading}
-//               >
-//                 {loading ? "Verifying..." : "Verify OTP"}
-//               </button>
-//             </form>
-//           </div>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
+          {error && (
+            <Alert severity="error" className="mt-2">
+              {error}
+            </Alert>
+          )}
 
-// export default OTPVerify;
+          <Button
+            variant="contained"
+            color="primary"
+            fullWidth
+            type="submit"
+            className="mt-4"
+            disabled={loading}
+            style={{ fontWeight: "bold" }}
+          >
+            {loading ? "Verifying..." : "Verify OTP"}
+          </Button>
+        </form>
+      </motion.div>
+    </div>
+  );
+};
+
+export default OTPVerify;

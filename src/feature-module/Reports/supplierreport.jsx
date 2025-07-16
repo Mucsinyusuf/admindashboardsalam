@@ -116,7 +116,7 @@ const SupplierReport = () => {
   };
 
   return (
-    <div className="page-wrapper">
+    <div className="row">
       <div className="content">
         <Breadcrumbs
           maintitle="Supplier Report"

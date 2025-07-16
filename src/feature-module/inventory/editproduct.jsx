@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import Select from "react-select";
-import { all_routes } from "../../Router/all_routes";
+import { all_routes } from "../../Router_Backup/all_routes";
 import { DatePicker } from "antd";
 import Addunits from "../../core/modals/inventory/addunits";
 import AddCategory from "../../core/modals/inventory/addcategory";
@@ -115,7 +115,7 @@ const EditProduct = () => {
     setIsImageVisible1(false);
   };
   return (
-    <div className="page-wrapper">
+    <div className="row">
       <div className="content">
         <div className="page-header">
           <div className="add-item d-flex">

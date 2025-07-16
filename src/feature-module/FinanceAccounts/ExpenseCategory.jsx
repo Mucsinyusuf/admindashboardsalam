@@ -6,7 +6,7 @@ import ImageWithBasePath from "../../core/img/imagewithbasebath";
 import Select from "react-select";
 import { Zap } from "react-feather/dist";
 import Swal from "sweetalert2";
-import { all_routes } from "../../Router/all_routes";
+import { all_routes } from "../../Router_Backup/all_routes";
 
 const ExpenseCategory = () => {
   const route = all_routes;

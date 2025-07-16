@@ -29,7 +29,7 @@ const InventoryReport = () => {
     { value: "shoe", label: "Shoe" },
   ];
   return (
-    <div className="page-wrapper">
+    <div className="row">
       <div className="content">
         <Breadcrumbs
           maintitle="Inventory Report"

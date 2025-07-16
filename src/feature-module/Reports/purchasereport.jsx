@@ -23,7 +23,7 @@ const PurchaseReport = () => {
     { value: "nikeJordan", label: "Nike Jordan" },
   ];
   return (
-    <div className="page-wrapper">
+    <div className="row">
       <div className="content">
         <Breadcrumbs
           maintitle="Purchase Report"

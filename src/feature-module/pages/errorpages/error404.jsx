@@ -1,7 +1,7 @@
 import React from "react";
 import ImageWithBasePath from "../../../core/img/imagewithbasebath";
 import { Link } from "react-router-dom";
-import { all_routes } from "../../../Router/all_routes";
+import { all_routes } from "../../../Router_Backup/all_routes";
 
 const Error404 = () => {
   const route = all_routes;

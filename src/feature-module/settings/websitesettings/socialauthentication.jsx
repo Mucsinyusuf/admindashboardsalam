@@ -25,7 +25,7 @@ const SocialAuthentication = () => {
     )
     return (
         <div>
-            <div className="page-wrapper">
+            <div className="row">
                 <div className="content settings-content">
                     <div className="page-header settings-pg-header">
                         <div className="add-item d-flex">

@@ -1,15 +1,13 @@
+// src/InitialPage/Sidebar/Header.jsx
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import FeatherIcon from "feather-icons-react";
 import { Search, XCircle } from "react-feather";
-import { all_routes } from "../../Router/all_routes";
 import companyLogo from "../../assets/img/company/company-logo.png";
 
 const Header = () => {
-  const route = all_routes;
   const [isMiniSidebar, setIsMiniSidebar] = useState(false);
 
-  // Update sidebar state when body class changes
   const updateSidebarState = () => {
     setIsMiniSidebar(document.body.classList.contains("mini-sidebar"));
   };
@@ -55,13 +53,12 @@ const Header = () => {
 
   return (
     <div className="header">
-      {/* Sidebar Logo */}
       <div
         className={`header-left ${isMiniSidebar ? "" : "active"}`}
         onMouseLeave={() => document.body.classList.remove("expand-menu")}
         onMouseOver={() => document.body.classList.add("expand-menu")}
       >
-        <Link to="/dashboard" className="logo">
+        <Link to="/overview" className="logo">
           <img
             src={companyLogo}
             alt="Company Logo"
@@ -83,7 +80,6 @@ const Header = () => {
         </Link>
       </div>
 
-      {/* Mobile Toggle */}
       <Link id="mobile_btn" className="mobile_btn" to="#" onClick={handleMobileSidebar}>
         <span className="bar-icon">
           <span />
@@ -92,14 +88,10 @@ const Header = () => {
         </span>
       </Link>
 
-      {/* Header Menu */}
       <ul className="nav user-menu">
-        {/* Search */}
         <li className="nav-item nav-searchinputs">
           <div className="top-nav-search">
-            <Link to="#" className="responsive-search">
-              <Search />
-            </Link>
+            <Link to="#" className="responsive-search"><Search /></Link>
             <form className="dropdown">
               <div
                 className="searchinputs dropdown-toggle"
@@ -109,9 +101,7 @@ const Header = () => {
               >
                 <input type="text" placeholder="Search" />
                 <div className="search-addon">
-                  <span>
-                    <XCircle className="feather-14" />
-                  </span>
+                  <span><XCircle className="feather-14" /></span>
                 </div>
               </div>
               <div className="dropdown-menu search-dropdown" aria-labelledby="dropdownMenuClickable">
@@ -130,13 +120,9 @@ const Header = () => {
           </div>
         </li>
 
-        {/* Branch Selector */}
+        {/* Branch Dropdown */}
         <li className="nav-item dropdown has-arrow main-drop select-store-dropdown">
-          <Link
-            to="#"
-            className="dropdown-toggle nav-link select-store"
-            data-bs-toggle="dropdown"
-          >
+          <Link to="#" className="dropdown-toggle nav-link select-store" data-bs-toggle="dropdown">
             <span className="user-info">
               <span className="user-letter" style={{ fontSize: "20px" }}>🏦</span>
               <span className="user-detail">
@@ -151,13 +137,9 @@ const Header = () => {
           </div>
         </li>
 
-        {/* Admin Profile */}
+        {/* Profile Dropdown */}
         <li className="nav-item dropdown has-arrow main-drop">
-          <Link
-            to="#"
-            className="dropdown-toggle nav-link userset"
-            data-bs-toggle="dropdown"
-          >
+          <Link to="#" className="dropdown-toggle nav-link userset" data-bs-toggle="dropdown">
             <span className="user-info">
               <span className="user-letter" style={{ fontSize: "22px" }}>👤</span>
               <span className="user-detail">
@@ -171,10 +153,10 @@ const Header = () => {
               <h6 className="mb-1">Admin</h6>
               <p className="mb-2">Salaam Bank</p>
               <hr className="m-0" />
-              <Link className="dropdown-item" to={route.route}>
+              <Link className="dropdown-item" to="#">
                 <i className="me-2" data-feather="user" /> My Profile
               </Link>
-              <Link className="dropdown-item" to={route.generalsettings}>
+              <Link className="dropdown-item" to="#">
                 <i className="me-2" data-feather="settings" /> Settings
               </Link>
               <hr className="m-0" />

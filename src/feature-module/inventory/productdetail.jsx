@@ -20,7 +20,7 @@ const ProfileManagement = () => {
   ];
 
   return (
-    <div className="page-wrapper">
+    <div className="row">
       <div className="content">
         <div className="page-header mb-4">
           <div className="page-title">

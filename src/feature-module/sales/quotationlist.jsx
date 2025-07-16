@@ -166,7 +166,7 @@ const QuotationList = () => {
       };
     return (
         <div>
-            <div className="page-wrapper">
+            <div className="row">
                 <div className="content">
                     <div className="page-header">
                         <div className="add-item d-flex">

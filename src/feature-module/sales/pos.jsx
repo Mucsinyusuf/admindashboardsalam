@@ -187,7 +187,7 @@ const Pos = () => {
   };
   return (
     <div>
-      <div className="page-wrapper pos-pg-wrapper ms-0">
+      <div className="row pos-pg-wrapper ms-0">
         <div className="content pos-design p-0">
           <div className="btn-row d-sm-flex align-items-center">
             <Link

@@ -21,7 +21,7 @@ import EditBankSettingList from "../../../core/modals/settings/editbanksettingli
 import withReactContent from "sweetalert2-react-content";
 import Swal from "sweetalert2";
 import SettingsSideBar from "../settingssidebar";
-import { all_routes } from "../../../Router/all_routes";
+import { all_routes } from "../../../Router_Backup/all_routes";
 
 const BankSetting = () => {
   const route = all_routes;
