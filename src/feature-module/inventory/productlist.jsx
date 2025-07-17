@@ -2,10 +2,12 @@ import React, { useState, useEffect } from "react";
 import { useAuth } from "../../context/AuthContext";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+import { useNavigate } from "react-router-dom";
 
-const CustomerOnboarding = () => {
+const AccountLookupStep = () => {
   const { token } = useAuth();
   const MySwal = withReactContent(Swal);
+  const navigate = useNavigate();
 
   const [branch, setBranch] = useState("");
   const [accountNumber, setAccountNumber] = useState("");
@@ -14,6 +16,7 @@ const CustomerOnboarding = () => {
   const [users, setUsers] = useState([]);
   const [rolesList, setRolesList] = useState([]);
   const [searchError, setSearchError] = useState("");
+  console.log(MySwal);
 
   useEffect(() => {
     const fetchRoles = async () => {
@@ -86,54 +89,21 @@ const CustomerOnboarding = () => {
     setUsers(updated);
   };
 
-  const handleSubmit = async () => {
-    try {
-      const payload = {
-        account_number: accountData.account_number,
-        branch: accountData.brn,
-        custno: accountData.custno,
-        users: users.map((u) => ({
-          full_name: u.full_name,
-          phone: u.phone,
-          email: u.email,
-          username: u.username,
-          password: u.password || "12345",
-          daily_limit: Number(u.daily_limit),
-          role: u.role,
-          role_ids: u.role_id ? [Number(u.role_id)] : [],
-        })),
-      };
+  const handleNext = () => {
+    // Store form state in sessionStorage
+    sessionStorage.setItem(
+      "onboardingStep1",
+      JSON.stringify({ accountData, users })
+    );
 
-      const res = await fetch("/api/onboarding/add-users", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(payload),
-      });
-
-      const data = await res.json();
-      if (!res.ok || data.status !== "success") {
-        MySwal.fire("Error", data.message || "Onboarding failed", "error");
-        return;
-      }
-
-      MySwal.fire("Success", "Users onboarded successfully.", "success");
-      setBranch("");
-      setAccountNumber("");
-      setAccountData({ details: {} });
-      setUsers([]);
-    } catch (err) {
-      MySwal.fire("Error", "An error occurred during submission.", "error");
-    }
+    navigate("/company-KYC");
   };
 
   return (
     <div className="row">
       <div className="page-header mb-4">
         <h4>Corporate Onboarding</h4>
-        <h6>Search Account and Onboard Users</h6>
+        <h6>Step 1: Account Look Up and Onboard Directors</h6>
       </div>
 
       <form className="row mb-3" onSubmit={handleSearch}>
@@ -166,7 +136,7 @@ const CustomerOnboarding = () => {
 
       {searchError && <div className="alert alert-danger">{searchError}</div>}
 
-      {/* Account Details as a Form */}
+      {/* Account Details */}
       <div className="card mb-4">
         <div className="card-header">Account Details</div>
         <div className="card-body">
@@ -190,20 +160,6 @@ const CustomerOnboarding = () => {
                   .filter(Boolean)
                   .join(", "),
               },
-              // { label: "Account Status", value: accountData.details?.accstat },
-              // { label: "Account Open Date", value: accountData.details?.accopendt },
-              // { label: "Alt Account", value: accountData.details?.altacc },
-              // { label: "Frozen", value: accountData.details?.frozen },
-              // { label: "Post Allowed", value: accountData.details?.postallowed },
-              // { label: "Type", value: accountData.details?.acctype },
-              // { label: "Status Since", value: accountData.details?.statsince },
-              // { label: "Dormancy Param", value: accountData.details?.dormprm },
-              // { label: "Clearing Acc No", value: accountData.details?.clracno },
-              // { label: "Auto Status Change", value: accountData.details?.autostatchange },
-              // { label: "Track Record", value: accountData.details?.trkrec },
-              // { label: "Reference Required", value: accountData.details?.refreq },
-              // { label: "Inherit Rep", value: accountData.details?.inheritrep },
-              // { label: "A/C Desc", value: accountData.details?.adesc },
             ].map((field, i) => (
               <div className="col-md-6" key={i}>
                 <label className="form-label">{field.label}</label>
@@ -317,12 +273,14 @@ const CustomerOnboarding = () => {
 
           <div className="text-end">
             <button
-              className="btn btn-success mt-3"
-              onClick={handleSubmit}
+              className="btn btn-primary mt-3"
+              onClick={handleNext}
               disabled={users.length === 0}
             >
-              Submit Onboarding
+              Next
             </button>
+            
+            
           </div>
         </div>
       </div>
@@ -330,4 +288,4 @@ const CustomerOnboarding = () => {
   );
 };
 
-export default CustomerOnboarding;
+export default AccountLookupStep;

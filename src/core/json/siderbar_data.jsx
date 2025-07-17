@@ -23,18 +23,42 @@ export const SidebarData = [
       },
     ],
   },
-  {
-    label: "Client & Company Management",
+    {
+    label: "Corporate Onboarding",
     submenuOpen: true,
     showSubRoute: false,
     submenuHdr: "Client & Company Management",
     submenuItems: [
-      { label: "Company KYC Documents", link: "/company-KYC", icon: <Icon.FileText /> },
-      { label: "Company User Mapping", link: "/company-user-mapping", icon: <Icon.Users /> },
-      { label: "Company Access Rights", link: "/company-access-rights", icon: <Icon.Lock /> },
-      { label: "Profile Management", link: "/profile-management", icon: <Icon.UserCheck /> },
-      { label: "Company Signatories", link: "/companysignatories", icon: <Icon.UserPlus /> },
-      { label: "Corporate Onboarding", link: "/corporate-onboarding", icon: <Icon.Briefcase /> }
+      {
+        label: "Account Look Up",
+        link: "/corporate-onboarding",
+        icon: <Icon.Briefcase />,
+      },
+      {
+        label: "Company KYC Documents",
+        link: "/company-KYC",
+        icon: <Icon.FileText />,
+      },
+      {
+        label: "Company User Mapping",
+        link: "/company-user-mapping",
+        icon: <Icon.Users />,
+      },
+      {
+        label: "Company Access Rights",
+        link: "/company-access-rights",
+        icon: <Icon.Lock />,
+      },
+      {
+        label: "Profile Management",
+        link: "/profile-management",
+        icon: <Icon.UserCheck />,
+      },
+      {
+        label: "Company Signatories",
+        link: "/companysignatories",
+        icon: <Icon.UserPlus />,
+      },
     ],
   },
   {

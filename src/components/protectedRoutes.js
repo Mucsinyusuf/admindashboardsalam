@@ -3,7 +3,7 @@
 // Components
 import Dashboard from "../feature-module/dashboard/Dashboard";
 import SalesDashboard from "../feature-module/dashboard/Salesdashboard";
-import CustomerOnboarding from "../feature-module/inventory/productlist";
+import AccountLookupStep from "../feature-module/inventory/productlist";
 import KYCForm from "../feature-module/inventory/addproduct";
 import CompanyUserMapping from "../feature-module/inventory/expiredproduct";
 import AccessRights from "../feature-module/inventory/lowstock";
@@ -69,7 +69,7 @@ const protectedRoutes = [
   { path: "/compliance", component: ComplianceAlertList},
   { path: "/heatmap", component: CategoryList},
 
-  { path: "/corporate-onboarding", component: CustomerOnboarding },
+  { path: "/corporate-onboarding", component:AccountLookupStep },
   { path: "/company-KYC", component: KYCForm },
   { path: "/company-user-mapping", component: CompanyUserMapping },
   { path: "/company-access-rights", component: AccessRights },
