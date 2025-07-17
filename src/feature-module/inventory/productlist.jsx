@@ -1,40 +1,19 @@
 import React, { useState, useEffect } from "react";
-import {
-  Typography,
-  TextField,
-  Button,
-  Card,
-  CardContent,
-  Grid,
-  Alert,
-  Snackbar,
-  InputAdornment,
-  Select,
-  MenuItem,
-  FormControl,
-  InputLabel,
-  Table,
-  TableHead,
-  TableRow,
-  TableCell,
-  TableBody,
-  Box,
-} from "@mui/material";
 import { useAuth } from "../../context/AuthContext";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
 
 const CustomerOnboarding = () => {
   const { token } = useAuth();
+  const MySwal = withReactContent(Swal);
 
   const [branch, setBranch] = useState("");
   const [accountNumber, setAccountNumber] = useState("");
   const [loading, setLoading] = useState(false);
-  const [accountData, setAccountData] = useState(null);
-  const [error, setError] = useState("");
+  const [accountData, setAccountData] = useState({ details: {} });
   const [users, setUsers] = useState([]);
   const [rolesList, setRolesList] = useState([]);
-  const [accountLimit, setAccountLimit] = useState("");
-  const [limitLocked, setLimitLocked] = useState(false);
-  const [snack, setSnack] = useState({ open: false, message: "", severity: "success" });
+  const [searchError, setSearchError] = useState("");
 
   useEffect(() => {
     const fetchRoles = async () => {
@@ -43,8 +22,8 @@ const CustomerOnboarding = () => {
         const res = await fetch("/api/admin/roles", {
           headers: { Authorization: `Bearer ${token}` },
         });
-        const roles = await res.json();
-        const formatted = roles.map((r) => ({
+        const data = await res.json();
+        const formatted = data.map((r) => ({
           id: r.id,
           label: r.description || r.name,
         }));
@@ -56,17 +35,12 @@ const CustomerOnboarding = () => {
     fetchRoles();
   }, [token]);
 
-  const handleSnack = (message, severity = "success") => {
-    setSnack({ open: true, message, severity });
-  };
-
   const handleSearch = async (e) => {
     e.preventDefault();
-    setError("");
+    setSearchError("");
     setLoading(true);
-    setAccountData(null);
+    setAccountData({ details: {} });
     setUsers([]);
-    setLimitLocked(false);
 
     try {
       const res = await fetch("/api/onboarding/account-lookup", {
@@ -82,7 +56,7 @@ const CustomerOnboarding = () => {
 
       const data = await res.json();
       if (!data || !data.account_number) {
-        setError("Account not found. Please check the branch and account number.");
+        setSearchError("Account not found.");
         return;
       }
 
@@ -90,18 +64,17 @@ const CustomerOnboarding = () => {
       const directors = data.directors || [];
       const preparedUsers = directors.map((name) => ({
         full_name: name,
-        phone: "",
-        email: "",
         username: "",
         password: "",
+        phone: "",
+        email: "",
         daily_limit: "",
         role: "",
         role_id: "",
       }));
       setUsers(preparedUsers);
     } catch (err) {
-      console.error(err);
-      setError("Invalid account details or network issue.");
+      setSearchError("Something went wrong. Check details or connection.");
     } finally {
       setLoading(false);
     }
@@ -113,46 +86,7 @@ const CustomerOnboarding = () => {
     setUsers(updated);
   };
 
-  const handleSetLimit = async () => {
-    if (!accountLimit || isNaN(accountLimit) || Number(accountLimit) < 100) {
-      handleSnack("Enter a valid daily limit of at least 100 KES.", "error");
-      return;
-    }
-
-    try {
-      const res = await fetch("/api/onboarding/set-limits", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          account_number: accountData.account_number,
-          daily_limit: Number(accountLimit),
-        }),
-      });
-
-      const data = await res.json();
-      if (!res.ok || data.status !== "success") {
-        handleSnack(data.message || "Failed to set limit", "error");
-        return;
-      }
-
-      const updatedUsers = users.map((user) => ({
-        ...user,
-        daily_limit: Number(accountLimit),
-      }));
-      setUsers(updatedUsers);
-      setLimitLocked(true);
-      setAccountLimit("");
-      handleSnack("Daily limit set successfully for account and users.");
-    } catch (err) {
-      console.error(err);
-      handleSnack("Error setting daily limit.", "error");
-    }
-  };
-
-  const handleSubmitOnboarding = async () => {
+  const handleSubmit = async () => {
     try {
       const payload = {
         account_number: accountData.account_number,
@@ -181,179 +115,217 @@ const CustomerOnboarding = () => {
 
       const data = await res.json();
       if (!res.ok || data.status !== "success") {
-        handleSnack(data.message || "Onboarding failed", "error");
+        MySwal.fire("Error", data.message || "Onboarding failed", "error");
         return;
       }
 
+      MySwal.fire("Success", "Users onboarded successfully.", "success");
       setBranch("");
       setAccountNumber("");
-      setAccountData(null);
+      setAccountData({ details: {} });
       setUsers([]);
-      setAccountLimit("");
-      setLimitLocked(false);
-      setError("");
-
-      handleSnack("Users onboarded successfully.");
     } catch (err) {
-      console.error(err);
-      handleSnack("Error during onboarding.", "error");
+      MySwal.fire("Error", "An error occurred during submission.", "error");
     }
   };
 
   return (
-    <div className="row" style={{ marginTop: "40px", padding: "0 20px" }}>
-      <Typography variant="h5" gutterBottom>
-        Corporate Onboarding Lookup
-      </Typography>
+    <div className="row">
+      <div className="page-header mb-4">
+        <h4>Corporate Onboarding</h4>
+        <h6>Search Account and Onboard Users</h6>
+      </div>
 
-      <Box component="form" onSubmit={handleSearch} sx={{ mb: 4 }}>
-        <Grid container spacing={2}>
-          <Grid item md={4}>
-            <TextField fullWidth required label="Branch" value={branch} onChange={(e) => setBranch(e.target.value)} />
-          </Grid>
-          <Grid item md={4}>
-            <TextField fullWidth required label="Account Number" value={accountNumber} onChange={(e) => setAccountNumber(e.target.value)} />
-          </Grid>
-          <Grid item md={4}>
-            <Button type="submit" fullWidth variant="contained" disabled={loading} sx={{ height: "100%", borderRadius: 2 }}>
-              {loading ? "Searching..." : "Search Account"}
-            </Button>
-          </Grid>
-        </Grid>
-      </Box>
+      <form className="row mb-3" onSubmit={handleSearch}>
+        <div className="col-md-4">
+          <input
+            type="text"
+            className="form-control"
+            placeholder="Branch"
+            value={branch}
+            onChange={(e) => setBranch(e.target.value)}
+            required
+          />
+        </div>
+        <div className="col-md-4">
+          <input
+            type="text"
+            className="form-control"
+            placeholder="Account Number"
+            value={accountNumber}
+            onChange={(e) => setAccountNumber(e.target.value)}
+            required
+          />
+        </div>
+        <div className="col-md-4">
+          <button className="btn btn-primary w-100" type="submit" disabled={loading}>
+            {loading ? "Searching..." : "Search"}
+          </button>
+        </div>
+      </form>
 
-      {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
+      {searchError && <div className="alert alert-danger">{searchError}</div>}
 
-      {accountData && (
-        <>
-          <Card sx={{ mb: 3 }}>
-            <CardContent>
-              <Typography variant="h6" gutterBottom>
-                Account Lookup Result
-              </Typography>
-              <Table size="small">
-                <TableBody>
-                  {Object.entries({
-                    "Account Number": accountData.account_number,
-                    "Account Name": accountData.account_name,
-                    "Customer No": accountData.custno,
-                    Branch: accountData.brn,
-                    Owners: accountData.owners?.join(", "),
-                    Directors: accountData.directors?.join(", "),
-                    "Customer Name (Details)": accountData.details?.cust_name,
-                    Address: [
-                      accountData.details?.address_1,
-                      accountData.details?.address_2,
-                      accountData.details?.address_3,
-                      accountData.details?.address_4,
-                    ].filter(Boolean).join(", "),
-                    "Account Status": accountData.details?.accstat,
-                    "Account Type": accountData.details?.acctype,
-                    "Account Open Date": accountData.details?.accopendt,
-                  }).map(([key, val]) => (
-                    <TableRow key={key}>
-                      <TableCell sx={{ fontWeight: "bold", width: "30%" }}>{key}</TableCell>
-                      <TableCell>{val || "-"}</TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </CardContent>
-          </Card>
+      {/* Account Details as a Form */}
+      <div className="card mb-4">
+        <div className="card-header">Account Details</div>
+        <div className="card-body">
+          <div className="row g-3">
+            {[
+              { label: "Account Number", value: accountData.account_number },
+              { label: "Account Name", value: accountData.account_name },
+              { label: "Customer No", value: accountData.custno },
+              { label: "Branch", value: accountData.brn },
+              { label: "Customer", value: accountData.details?.cust_name },
+              { label: "Owners", value: (accountData.owners || []).join(", ") },
+              { label: "Directors", value: (accountData.directors || []).join(", ") },
+              {
+                label: "Address",
+                value: [
+                  accountData.details?.address_1,
+                  accountData.details?.address_2,
+                  accountData.details?.address_3,
+                  accountData.details?.address_4,
+                ]
+                  .filter(Boolean)
+                  .join(", "),
+              },
+              // { label: "Account Status", value: accountData.details?.accstat },
+              // { label: "Account Open Date", value: accountData.details?.accopendt },
+              // { label: "Alt Account", value: accountData.details?.altacc },
+              // { label: "Frozen", value: accountData.details?.frozen },
+              // { label: "Post Allowed", value: accountData.details?.postallowed },
+              // { label: "Type", value: accountData.details?.acctype },
+              // { label: "Status Since", value: accountData.details?.statsince },
+              // { label: "Dormancy Param", value: accountData.details?.dormprm },
+              // { label: "Clearing Acc No", value: accountData.details?.clracno },
+              // { label: "Auto Status Change", value: accountData.details?.autostatchange },
+              // { label: "Track Record", value: accountData.details?.trkrec },
+              // { label: "Reference Required", value: accountData.details?.refreq },
+              // { label: "Inherit Rep", value: accountData.details?.inheritrep },
+              // { label: "A/C Desc", value: accountData.details?.adesc },
+            ].map((field, i) => (
+              <div className="col-md-6" key={i}>
+                <label className="form-label">{field.label}</label>
+                <input type="text" className="form-control" value={field.value || ""} readOnly />
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
 
-          <Box display="flex" alignItems="center" gap={2} mb={2}>
-            <TextField
-              label="Set Daily Limit"
-              value={accountLimit}
-              onChange={(e) => setAccountLimit(e.target.value)}
-              type="number"
-              InputProps={{ endAdornment: <InputAdornment position="end">KES</InputAdornment> }}
-            />
-            <Button variant="outlined" onClick={handleSetLimit} sx={{ borderRadius: 2 }}>
-              Set Limit
-            </Button>
-            {limitLocked && (
-              <Button variant="text" color="secondary" size="small" onClick={() => setLimitLocked(false)}>
-                Edit Per-User Limits
-              </Button>
-            )}
-          </Box>
-
-          <Card>
-            <CardContent>
-              <Typography variant="h6">Onboard Users</Typography>
-              <Table size="small">
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Full Name</TableCell>
-                    <TableCell>Username</TableCell>
-                    <TableCell>Password</TableCell>
-                    <TableCell>Phone</TableCell>
-                    <TableCell>Email</TableCell>
-                    <TableCell>Daily Limit</TableCell>
-                    <TableCell>Role</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {users.map((u, idx) => (
-                    <TableRow key={idx}>
-                      <TableCell><TextField fullWidth value={u.full_name} InputProps={{ readOnly: true }} /></TableCell>
-                      <TableCell><TextField fullWidth value={u.username} onChange={(e) => handleUserChange(idx, "username", e.target.value)} /></TableCell>
-                      <TableCell><TextField fullWidth type="password" value={u.password} onChange={(e) => handleUserChange(idx, "password", e.target.value)} /></TableCell>
-                      <TableCell><TextField fullWidth value={u.phone} onChange={(e) => handleUserChange(idx, "phone", e.target.value)} /></TableCell>
-                      <TableCell><TextField fullWidth value={u.email} onChange={(e) => handleUserChange(idx, "email", e.target.value)} /></TableCell>
-                      <TableCell>
-                        <TextField
-                          fullWidth
-                          type="number"
-                          value={u.daily_limit}
-                          onChange={(e) => handleUserChange(idx, "daily_limit", e.target.value)}
-                          InputProps={{ readOnly: limitLocked }}
+      {/* Directors Table */}
+      <div className="card">
+        <div className="card-header">Onboard Directors</div>
+        <div className="card-body">
+          <div className="table-responsive">
+            <table className="table table-bordered table-sm">
+              <thead className="table-light">
+                <tr>
+                  <th>Full Name</th>
+                  <th>Username</th>
+                  <th>Password</th>
+                  <th>Phone</th>
+                  <th>Email</th>
+                  <th>Daily Limit</th>
+                  <th>Role</th>
+                </tr>
+              </thead>
+              <tbody>
+                {users.length === 0 ? (
+                  <tr>
+                    <td colSpan="7" className="text-center text-muted">
+                      No directors found. Search for an account.
+                    </td>
+                  </tr>
+                ) : (
+                  users.map((user, idx) => (
+                    <tr key={idx}>
+                      <td>
+                        <input
+                          type="text"
+                          className="form-control form-control-sm"
+                          value={user.full_name}
+                          readOnly
                         />
-                      </TableCell>
-                      <TableCell>
-                        <FormControl fullWidth>
-                          <InputLabel>Role</InputLabel>
-                          <Select
-                            value={u.role_id}
-                            label="Role"
-                            onChange={(e) => {
-                              const id = e.target.value;
-                              const role = rolesList.find((r) => String(r.id) === id);
-                              handleUserChange(idx, "role_id", id);
-                              handleUserChange(idx, "role", role?.label || "");
-                            }}
-                          >
-                            {rolesList.map((r) => (
-                              <MenuItem key={r.id} value={r.id}>{r.label}</MenuItem>
-                            ))}
-                          </Select>
-                        </FormControl>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-              <Box mt={2}>
-                <Button variant="contained" onClick={handleSubmitOnboarding} sx={{ borderRadius: 2 }}>
-                  Submit Onboarding
-                </Button>
-              </Box>
-            </CardContent>
-          </Card>
-        </>
-      )}
+                      </td>
+                      <td>
+                        <input
+                          type="text"
+                          className="form-control form-control-sm"
+                          value={user.username}
+                          onChange={(e) => handleUserChange(idx, "username", e.target.value)}
+                        />
+                      </td>
+                      <td>
+                        <input
+                          type="password"
+                          className="form-control form-control-sm"
+                          value={user.password}
+                          onChange={(e) => handleUserChange(idx, "password", e.target.value)}
+                        />
+                      </td>
+                      <td>
+                        <input
+                          type="text"
+                          className="form-control form-control-sm"
+                          value={user.phone}
+                          onChange={(e) => handleUserChange(idx, "phone", e.target.value)}
+                        />
+                      </td>
+                      <td>
+                        <input
+                          type="email"
+                          className="form-control form-control-sm"
+                          value={user.email}
+                          onChange={(e) => handleUserChange(idx, "email", e.target.value)}
+                        />
+                      </td>
+                      <td>
+                        <input
+                          type="number"
+                          className="form-control form-control-sm"
+                          value={user.daily_limit}
+                          onChange={(e) => handleUserChange(idx, "daily_limit", e.target.value)}
+                        />
+                      </td>
+                      <td>
+                        <select
+                          className="form-select form-select-sm"
+                          value={user.role_id}
+                          onChange={(e) => {
+                            const id = e.target.value;
+                            const role = rolesList.find((r) => String(r.id) === id);
+                            handleUserChange(idx, "role_id", id);
+                            handleUserChange(idx, "role", role?.label || "");
+                          }}
+                        >
+                          <option value="">Select Role</option>
+                          {rolesList.map((r) => (
+                            <option key={r.id} value={r.id}>
+                              {r.label}
+                            </option>
+                          ))}
+                        </select>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
 
-      <Snackbar
-        anchorOrigin={{ vertical: "top", horizontal: "center" }}
-        open={snack.open}
-        autoHideDuration={4000}
-        onClose={() => setSnack({ ...snack, open: false })}
-      >
-        <Alert severity={snack.severity} onClose={() => setSnack({ ...snack, open: false })} sx={{ width: "100%" }}>
-          {snack.message}
-        </Alert>
-      </Snackbar>
+          <div className="text-end">
+            <button
+              className="btn btn-success mt-3"
+              onClick={handleSubmit}
+              disabled={users.length === 0}
+            >
+              Submit Onboarding
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

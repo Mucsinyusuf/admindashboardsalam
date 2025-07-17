@@ -149,8 +149,10 @@ const AccessRights = () => {
 
               {/* Schedule + Geo + Switches */}
               <div className="row mt-3">
-                <div className="col-lg-4">
+                <div className="col-lg-4 ">
+                  
                   <label>Access Schedule</label>
+                  <br/>
                   <TimePicker.RangePicker
                     format="HH:mm"
                     onChange={(value) => handleInputChange('accessSchedule', value)}
