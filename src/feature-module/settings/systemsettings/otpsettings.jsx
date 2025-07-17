@@ -1,160 +1,135 @@
-import { RotateCcw } from 'feather-icons-react/build/IconComponents';
-import React from 'react'
-import { OverlayTrigger, Tooltip } from 'react-bootstrap';
-import { ChevronUp } from 'react-feather';
-import { Link } from 'react-router-dom'
-import Select from 'react-select'
-import { setToogleHeader } from '../../../core/redux/action';
-import { useDispatch, useSelector } from 'react-redux';
-import SettingsSideBar from '../settingssidebar';
+import React, { useState } from 'react';
+import Select from 'react-select';
 
 const OtpSettings = () => {
-    const dispatch = useDispatch();
-    const data = useSelector((state) => state.toggle_header);
-    
-    const duration = [
-        { value: '5mins', label: '5 Mins' },
-        { value: '10mins', label: '10 Mins' },
-    ];
-    const numbers = [
-        { value: '4', label: '4' },
-        { value: '5', label: '5' },
-    ];
-    const sms = [
+    const otpMethods = [
         { value: 'SMS', label: 'SMS' },
-        { value: 'EMail', label: 'EMail' },
+        { value: 'Email', label: 'Email' },
+        { value: 'AuthenticatorApp', label: 'Authenticator App' },
     ];
-    const renderRefreshTooltip = (props) => (
-        <Tooltip id="refresh-tooltip" {...props}>
-            Refresh
-        </Tooltip>
-    );
-    const renderCollapseTooltip = (props) => (
-        <Tooltip id="refresh-tooltip" {...props}>
-            Collapse
-        </Tooltip>
-    )
+
+    const otpStatusOptions = [
+        { value: 'enabled', label: 'Enabled' },
+        { value: 'disabled', label: 'Disabled' },
+    ];
+
+    const [username, setUsername] = useState('');
+    const [otpMethod, setOtpMethod] = useState(null);
+    const [otpStatus, setOtpStatus] = useState(null);
+    const [forceReReg, setForceReReg] = useState(false);
+    const [lastOtpSent] = useState('2025-07-14 10:45:23');
+
+    const handleResetChannel = () => {
+        alert('OTP channel has been reset.');
+    };
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        // Handle save logic
+        console.log({
+            username,
+            otpMethod,
+            otpStatus,
+            forceReReg,
+            lastOtpSent,
+        });
+    };
+
     return (
-        <div>
-            <div className="row">
-                <div className="content settings-content">
-                    <div className="page-header settings-pg-header">
-                        <div className="add-item d-flex">
-                            <div className="page-title">
-                                <h4>Settings</h4>
-                                <h6>Manage your settings on portal</h6>
-                            </div>
-                        </div>
-                        <ul className="table-top-head">
-                            <li>
-                                <OverlayTrigger placement="top" overlay={renderRefreshTooltip}>
-
-                                    <Link data-bs-toggle="tooltip" data-bs-placement="top">
-                                        <RotateCcw />
-                                    </Link>
-                                </OverlayTrigger>
-                            </li>
-                            <li>
-                                <OverlayTrigger placement="top" overlay={renderCollapseTooltip}>
-
-                                <Link
-                                data-bs-toggle="tooltip"
-                                data-bs-placement="top"
-                                id="collapse-header"
-                                className={data ? "active" : ""}
-                                onClick={() => { dispatch(setToogleHeader(!data)) }}
-                            >
-                                <ChevronUp />
-                            </Link>
-                                </OverlayTrigger>
-                            </li>
-
-                        </ul>
+        <div className="row">
+            <h3>OTP Management</h3>
+            <p>Manage OTP configuration for a user</p>
+            <form onSubmit={handleSubmit} className="mt-4">
+                <div className="mb-3 row">
+                    <label className="col-sm-3 col-form-label">User ID or Username</label>
+                    <div className="col-sm-6">
+                        <input
+                            type="text"
+                            className="form-control"
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
+                        />
                     </div>
-                    <div className="row">
-                        <div className="col-xl-12">
-                            <div className="settings-wrapper d-flex">
-                            <SettingsSideBar/>
-                                <div className="settings-page-wrap">
-                                    <form>
-                                        <div className="setting-title">
-                                            <h4>OTP Settings</h4>
-                                        </div>
-                                        <div className="company-info company-images">
-                                            <div className="localization-info">
-                                                <div className="row align-items-center">
-                                                    <div className="col-sm-4">
-                                                        <div className="setting-info">
-                                                            <h6>OTP Type</h6>
-                                                            <p>Your can configure the type</p>
-                                                        </div>
-                                                    </div>
-                                                    <div className="col-sm-4">
-                                                        <div className="localization-select">
-                                                        <Select
-                                                        options={sms}
-                                                        className="select"
-                                                        //placeholder="Choose a Duration"
-                                                    />
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div className="row align-items-center">
-                                                    <div className="col-sm-4">
-                                                        <div className="setting-info">
-                                                            <h6>OTP Digit Limit</h6>
-                                                            <p>Select size of the format </p>
-                                                        </div>
-                                                    </div>
-                                                    <div className="col-sm-4">
-                                                        <div className="localization-select">
-                                                        <Select
-                                                        options={numbers}
-                                                        className="select"
-                                                        //placeholder="Choose a Duration"
-                                                    />
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div className="row align-items-center">
-                                                    <div className="col-sm-4">
-                                                        <div className="setting-info">
-                                                            <h6>OTP Expire Time</h6>
-                                                            <p>Select expire time of OTP </p>
-                                                        </div>
-                                                    </div>
-                                                    <div className="col-sm-4">
-                                                        <div className="localization-select">
-                                                            <Select
-                                                                options={duration}
-                                                                className="select"
-                                                                placeholder="Choose a Duration"
-                                                            />
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div className="modal-footer-btn">
-                                            <button
-                                                type="button"
-                                                className="btn btn-cancel me-2"
-                                            >
-                                                Cancel
-                                            </button>
-                                            <Link to="#" className="btn btn-submit">
-                                                Save Changes
-                                            </Link>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
+                </div>
+
+                <div className="mb-3 row">
+                    <label className="col-sm-3 col-form-label">OTP Method</label>
+                    <div className="col-sm-6">
+                        <Select
+                            options={otpMethods}
+                            value={otpMethod}
+                            onChange={setOtpMethod}
+                            className="select"
+                        />
+                    </div>
+                </div>
+
+                <div className="mb-3 row">
+                    <label className="col-sm-3 col-form-label">OTP Activation Status</label>
+                    <div className="col-sm-6">
+                        <Select
+                            options={otpStatusOptions}
+                            value={otpStatus}
+                            onChange={setOtpStatus}
+                            className="select"
+                        />
+                    </div>
+                </div>
+
+                <div className="mb-3 row">
+                    <label className="col-sm-3 col-form-label">Force Re-registration</label>
+                    <div className="col-sm-6">
+                        <div className="form-check form-switch">
+                            <input
+                                className="form-check-input"
+                                type="checkbox"
+                                checked={forceReReg}
+                                onChange={(e) => setForceReReg(e.target.checked)}
+                                id="forceReRegSwitch"
+                            />
+                            <label className="form-check-label" htmlFor="forceReRegSwitch">
+                                {forceReReg ? 'Yes' : 'No'}
+                            </label>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-    )
-}
 
-export default OtpSettings
+                <div className="mb-3 row">
+                    <label className="col-sm-3 col-form-label">Last OTP Sent</label>
+                    <div className="col-sm-6">
+                        <input
+                            type="text"
+                            className="form-control"
+                            value={lastOtpSent}
+                            readOnly
+                        />
+                    </div>
+                </div>
+
+                <div className="mb-3 row">
+                    <label className="col-sm-3 col-form-label">Reset OTP Channel</label>
+                    <div className="col-sm-6">
+                        <button
+                            type="button"
+                            className="btn  btn-secondary"
+                            onClick={handleResetChannel}
+                        >
+                            Reset OTP Channel
+                        </button>
+                    </div>
+                </div>
+
+                <div className="mt-4">
+                    <button type="submit" className="btn btn-primary me-2">
+                        Save Changes
+                    </button>
+                    <button type="button" className="btn btn-secondary">
+                        Cancel
+                    </button>
+                </div>
+            </form>
+        </div>
+    );
+};
+
+export default OtpSettings;

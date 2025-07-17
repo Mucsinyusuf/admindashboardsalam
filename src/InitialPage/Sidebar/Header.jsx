@@ -1,19 +1,23 @@
-// src/InitialPage/Sidebar/Header.jsx
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import FeatherIcon from "feather-icons-react";
 import { Search, XCircle } from "react-feather";
+// ✅ Correct for this file's location
+import { useAuth } from "../../context/AuthContext";
 import companyLogo from "../../assets/img/company/company-logo.png";
 
 const Header = () => {
   const [isMiniSidebar, setIsMiniSidebar] = useState(false);
+  const { logout, user } = useAuth();
 
-  const updateSidebarState = () => {
-    setIsMiniSidebar(document.body.classList.contains("mini-sidebar"));
-  };
+  const pathname = window.location.pathname;
+  const shouldHideHeader =
+    ["/reactjs/template/dream-pos/index-three", "/reactjs/template/dream-pos/index-one"].includes(pathname);
 
   useEffect(() => {
-    updateSidebarState();
+    const updateSidebarState = () => {
+      setIsMiniSidebar(document.body.classList.contains("mini-sidebar"));
+    };
 
     const handleMouseover = (e) => {
       const toggleBtn = document.getElementById("toggle_btn");
@@ -30,13 +34,15 @@ const Header = () => {
       }
     };
 
+    updateSidebarState();
     document.addEventListener("mouseover", handleMouseover);
+
     return () => document.removeEventListener("mouseover", handleMouseover);
   }, []);
 
   const handleSidebarToggle = () => {
     document.body.classList.toggle("mini-sidebar");
-    updateSidebarState();
+    setIsMiniSidebar(!isMiniSidebar);
   };
 
   const handleMobileSidebar = () => {
@@ -44,10 +50,6 @@ const Header = () => {
     document.querySelector(".sidebar-overlay")?.classList.toggle("opened");
     document.querySelector("html")?.classList.toggle("menu-opened");
   };
-
-  const pathname = window.location.pathname;
-  const shouldHideHeader =
-    ["/reactjs/template/dream-pos/index-three", "/reactjs/template/dream-pos/index-one"].includes(pathname);
 
   if (shouldHideHeader) return null;
 
@@ -89,6 +91,7 @@ const Header = () => {
       </Link>
 
       <ul className="nav user-menu">
+        {/* Search */}
         <li className="nav-item nav-searchinputs">
           <div className="top-nav-search">
             <Link to="#" className="responsive-search"><Search /></Link>
@@ -106,9 +109,7 @@ const Header = () => {
               </div>
               <div className="dropdown-menu search-dropdown" aria-labelledby="dropdownMenuClickable">
                 <div className="search-info">
-                  <h6>
-                    <i data-feather="search" className="feather-16" /> Recent Searches
-                  </h6>
+                  <h6><i data-feather="search" className="feather-16" /> Recent Searches</h6>
                   <ul className="search-tags">
                     <li><Link to="#">Products</Link></li>
                     <li><Link to="#">Sales</Link></li>
@@ -143,14 +144,14 @@ const Header = () => {
             <span className="user-info">
               <span className="user-letter" style={{ fontSize: "22px" }}>👤</span>
               <span className="user-detail">
-                <span className="user-name">Admin</span>
+                <span className="user-name">{user?.username || "Admin"}</span>
                 <span className="user-role">Bank Admin</span>
               </span>
             </span>
           </Link>
           <div className="dropdown-menu menu-drop-user">
             <div className="profilename p-3">
-              <h6 className="mb-1">Admin</h6>
+              <h6 className="mb-1">{user?.username || "Admin"}</h6>
               <p className="mb-2">Salaam Bank</p>
               <hr className="m-0" />
               <Link className="dropdown-item" to="#">
@@ -160,9 +161,13 @@ const Header = () => {
                 <i className="me-2" data-feather="settings" /> Settings
               </Link>
               <hr className="m-0" />
-              <Link className="dropdown-item logout" to="/signin">
+              <button
+                className="dropdown-item logout"
+                onClick={logout}
+                style={{ border: "none", background: "none", width: "100%", textAlign: "left" }}
+              >
                 <i className="me-2" data-feather="log-out" /> Logout
-              </Link>
+              </button>
             </div>
           </div>
         </li>

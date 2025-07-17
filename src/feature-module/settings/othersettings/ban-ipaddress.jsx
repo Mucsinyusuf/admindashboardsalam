@@ -1,398 +1,285 @@
-import { ChevronUp, PlusCircle, RotateCcw, Sliders } from 'feather-icons-react/build/IconComponents';
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
-import { useDispatch, useSelector } from 'react-redux';
-import { Link } from 'react-router-dom'
-import { setToogleHeader } from '../../../core/redux/action';
+import { ChevronUp, RotateCcw, Sliders } from 'feather-icons-react/build/IconComponents';
 import { Filter } from 'react-feather';
+import { useDispatch, useSelector } from 'react-redux';
+import { setToogleHeader } from '../../../core/redux/action';
 import ImageWithBasePath from '../../../core/img/imagewithbasebath';
 import Select from 'react-select';
-import withReactContent from 'sweetalert2-react-content';
-import Swal from 'sweetalert2';
-import EditIpAddress from '../../../core/modals/settings/editipaddress';
-import AddIpAddress from '../../../core/modals/settings/addipaddress';
-import SettingsSideBar from '../settingssidebar';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 
-const BanIpaddress = () => {
+const UserActivityLogs = () => {
+  const dispatch = useDispatch();
+  const data = useSelector((state) => state.toggle_header);
 
-    const dispatch = useDispatch();
-    const data = useSelector((state) => state.toggle_header);
+  // Filter states
+  const [searchTerm, setSearchTerm] = useState('');
+  const [isFilterVisible, setIsFilterVisible] = useState(false);
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
+  const [activityType, setActivityType] = useState(null);
+  const [ipFilter, setIpFilter] = useState('');
 
-    const renderRefreshTooltip = (props) => (
-        <Tooltip id="refresh-tooltip" {...props}>
-            Refresh
-        </Tooltip>
-    );
-    const renderCollapseTooltip = (props) => (
-        <Tooltip id="refresh-tooltip" {...props}>
-            Collapse
-        </Tooltip>
-    )
+  const activityOptions = [
+    { value: 'login', label: 'Login' },
+    { value: 'approve', label: 'Approve' },
+    { value: 'edit', label: 'Edit' },
+    { value: 'create', label: 'Create' },
+  ];
 
-    const [isFilterVisible, setIsFilterVisible] = useState(false);
-    const toggleFilterVisibility = () => {
-        setIsFilterVisible((prevVisibility) => !prevVisibility);
-    };
-    const oldandlatestvalue = [
-        { value: "date", label: "Sort by Date" },
-        { value: "newest", label: "Newest" },
-        { value: "oldest", label: "Oldest" },
-      ];
+  const mockData = [
+    {
+      userId: '1001',
+      username: 'user1',
+      activity: 'Login',
+      ip: '192.168.0.1',
+      device: 'Windows 10, Chrome',
+      timestamp: '2025-07-14T10:00:00',
+    },
+    {
+      userId: '1002',
+      username: 'user2',
+      activity: 'Edit',
+      ip: '192.168.0.2',
+      device: 'MacBook, Safari',
+      timestamp: '2025-07-13T16:23:00',
+    },
+    {
+      userId: '1003',
+      username: 'user3',
+      activity: 'Create',
+      ip: '10.0.0.1',
+      device: 'Ubuntu, Firefox',
+      timestamp: '2025-07-15T13:45:00',
+    },
+  ];
 
-      const MySwal = withReactContent(Swal);
+  // Toggle filter panel visibility
+  const toggleFilterVisibility = () => {
+    setIsFilterVisible((prev) => {
+      console.log('Filter visibility toggled:', !prev);
+      return !prev;
+    });
+  };
 
-      const showConfirmationAlert = () => {
-          MySwal.fire({
-              title: 'Are you sure?',
-              text: 'You won\'t be able to revert this!',
-              showCancelButton: true,
-              confirmButtonColor: '#00ff00',
-              confirmButtonText: 'Yes, delete it!',
-              cancelButtonColor: '#ff0000',
-              cancelButtonText: 'Cancel',
-          }).then((result) => {
-              if (result.isConfirmed) {
-  
-                  MySwal.fire({
-                      title: 'Deleted!',
-                      text: 'Your file has been deleted.',
-                      className: "btn btn-success",
-                      confirmButtonText: 'OK',
-                      customClass: {
-                          confirmButton: 'btn btn-success',
-                      },
-                  });
-              } else {
-                  MySwal.close();
-              }
-  
-          });
-      };
-  
-    return (
-        <div>
-            <div className="row">
-                <div className="content settings-content">
-                    <div className="page-header settings-pg-header">
-                        <div className="add-item d-flex">
-                            <div className="page-title">
-                                <h4>Settings</h4>
-                                <h6>Manage your settings on portal</h6>
-                            </div>
-                        </div>
-                        <ul className="table-top-head">
-                            <li>
-                                <OverlayTrigger placement="top" overlay={renderRefreshTooltip}>
+  // Reset all filters
+  const resetFilters = () => {
+    setSearchTerm('');
+    setActivityType(null);
+    setStartDate(null);
+    setEndDate(null);
+    setIpFilter('');
+    setIsFilterVisible(false);
+  };
 
-                                    <Link data-bs-toggle="tooltip" data-bs-placement="top">
-                                        <RotateCcw />
-                                    </Link>
-                                </OverlayTrigger>
-                            </li>
-                            <li>
-                                <OverlayTrigger placement="top" overlay={renderCollapseTooltip}>
+  // Filter data according to filters
+  const filteredData = mockData.filter((log) => {
+    const searchLower = searchTerm.toLowerCase();
 
-                                    <Link
-                                        data-bs-toggle="tooltip"
-                                        data-bs-placement="top"
-                                        id="collapse-header"
-                                        className={data ? "active" : ""}
-                                        onClick={() => { dispatch(setToogleHeader(!data)) }}
-                                    >
-                                        <ChevronUp />
-                                    </Link>
-                                </OverlayTrigger>
-                            </li>
-                        </ul>
-                    </div>
-                    <div className="row">
-                        <div className="col-xl-12">
-                            <div className="settings-wrapper d-flex">
-                            <SettingsSideBar/>
-                                <div className="settings-page-wrap w-50">
-                                    <div className="setting-title">
-                                        <h4>Ban IP Address</h4>
-                                    </div>
-                                    <div className="page-header bank-settings justify-content-end">
-                                        <div className="page-btn">
-                                            <Link
-                                                to="#"
-                                                className="btn btn-added"
-                                                data-bs-toggle="modal"
-                                                data-bs-target="#add-banip"
-                                            >
-                                                <PlusCircle className="me-2" />
-                                                Add New Ban IP
-                                            </Link>
-                                        </div>
-                                    </div>
-                                    <div className="row">
-                                        <div className="col-lg-12">
-                                            <div className="card table-list-card">
-                                                <div className="card-body">
-                                                    <div className="table-top">
-                                                        <div className="search-set">
-                                                            <div className="search-input">
-                                                                <input
-                                                                    type="text"
-                                                                    placeholder="Search"
-                                                                    className="form-control form-control-sm formsearch"
-                                                                />
-                                                                <Link to className="btn btn-searchset">
-                                                                    <i data-feather="search" className="feather-search" />
-                                                                </Link>
-                                                            </div>
-                                                        </div>
-                                                        <div className="search-path">
-                                                            <div className="d-flex align-items-center">
-                                                                <Link className={`btn btn-filter ${isFilterVisible ? "setclose" : ""}`} id="filter_search">
-                                                                    <Filter
-                                                                        className="filter-icon"
-                                                                        onClick={toggleFilterVisibility}
-                                                                    />
-                                                                    <span onClick={toggleFilterVisibility}>
-                                                                        <ImageWithBasePath src="assets/img/icons/closes.svg" alt="img" />
-                                                                    </span>
-                                                                </Link>
-                                                            </div>
-                                                        </div>
-                                                        <div className="form-sort">
-                                                        <Sliders className="info-img" />
-                                                        <Select
-                                                          className="select"
-                                                          options={oldandlatestvalue}
-                                                          placeholder="Newest"
-                                                        />
-                                                        </div>
-                                                    </div>
-                                                    {/* /Filter */}
-                                                    <div
-                                                        className={`card${isFilterVisible ? " visible" : ""}`}
-                                                        id="filter_inputs"
-                                                        style={{ display: isFilterVisible ? "block" : "none" }}
-                                                    >
-                                                        <div className="card-body pb-0">
-                                                            <div className="row">
-                                                                <div className="col-lg-4 col-sm-6 col-12">
-                                                                    <div className="input-blocks">
-                                                                        <i data-feather="zap" className="info-img" />
-                                                                        <select className="select">
-                                                                            <option>Choose IP</option>
-                                                                            <option>211.11.0.25</option>
-                                                                            <option>211.03.0.11</option>
-                                                                        </select>
-                                                                    </div>
-                                                                </div>
-                                                                <div className="col-lg-3 col-sm-6 col-12 ms-auto">
-                                                                    <div className="input-blocks">
-                                                                        <Link className="btn btn-filters ms-auto">
-                                                                            {" "}
-                                                                            <i
-                                                                                data-feather="search"
-                                                                                className="feather-search"
-                                                                            />{" "}
-                                                                            Search{" "}
-                                                                        </Link>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    {/* /Filter */}
-                                                    <div className="table-responsive">
-                                                        <table className="table datanew">
-                                                            <thead>
-                                                                <tr>
-                                                                    <th className="no-sort">
-                                                                        <label className="checkboxs">
-                                                                            <input type="checkbox" id="select-all" />
-                                                                            <span className="checkmarks" />
-                                                                        </label>
-                                                                    </th>
-                                                                    <th>IP Address</th>
-                                                                    <th>Reason</th>
-                                                                    <th>Date</th>
-                                                                    <th className="no-sort text-end">Action</th>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                                <tr>
-                                                                    <td>
-                                                                        <label className="checkboxs">
-                                                                            <input type="checkbox" />
-                                                                            <span className="checkmarks" />
-                                                                        </label>
-                                                                    </td>
-                                                                    <td>211.11.0.25</td>
-                                                                    <td>
-                                                                        <p>
-                                                                            You can get on-demand services in order to find
-                                                                            a nearby service.
-                                                                        </p>
-                                                                    </td>
-                                                                    <td>12 Jul 2023</td>
-                                                                    <td className="action-table-data justify-content-end">
-                                                                        <div className="edit-delete-action">
-                                                                            <Link
-                                                                                className="me-2 p-2"
-                                                                                to="#"
-                                                                                data-bs-toggle="modal"
-                                                                                data-bs-target="#edit-banip"
-                                                                            >
-                                                                                <i
-                                                                                    data-feather="edit"
-                                                                                    className="feather-edit"
-                                                                                />
-                                                                            </Link>
-                                                                            <Link onClick={showConfirmationAlert}
-                                                                                className="confirm-text p-2"
-                                                                                to="#"
-                                                                            >
-                                                                                <i
-                                                                                    data-feather="trash-2"
-                                                                                    className="feather-trash-2"
-                                                                                />
-                                                                            </Link>
-                                                                        </div>
-                                                                    </td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>
-                                                                        <label className="checkboxs">
-                                                                            <input type="checkbox" />
-                                                                            <span className="checkmarks" />
-                                                                        </label>
-                                                                    </td>
-                                                                    <td>211.03.0.11</td>
-                                                                    <td>
-                                                                        <p>
-                                                                            Extract pricing information at inventory levels.
-                                                                        </p>
-                                                                    </td>
-                                                                    <td>24 Aug 2023</td>
-                                                                    <td className="action-table-data justify-content-end">
-                                                                        <div className="edit-delete-action">
-                                                                            <Link
-                                                                                className="me-2 p-2"
-                                                                                to="#"
-                                                                                data-bs-toggle="modal"
-                                                                                data-bs-target="#edit-banip"
-                                                                            >
-                                                                                <i
-                                                                                    data-feather="edit"
-                                                                                    className="feather-edit"
-                                                                                />
-                                                                            </Link>
-                                                                            <Link onClick={showConfirmationAlert}
-                                                                                className="confirm-text p-2"
-                                                                                to="#"
-                                                                            >
-                                                                                <i
-                                                                                    data-feather="trash-2"
-                                                                                    className="feather-trash-2"
-                                                                                />
-                                                                            </Link>
-                                                                        </div>
-                                                                    </td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>
-                                                                        <label className="checkboxs">
-                                                                            <input type="checkbox" />
-                                                                            <span className="checkmarks" />
-                                                                        </label>
-                                                                    </td>
-                                                                    <td>211.24.0.17</td>
-                                                                    <td>
-                                                                        <p>
-                                                                            Fetching data for competitors to gain
-                                                                            competitive advantage.
-                                                                        </p>
-                                                                    </td>
-                                                                    <td>07 Sep 2023</td>
-                                                                    <td className="action-table-data justify-content-end">
-                                                                        <div className="edit-delete-action">
-                                                                            <Link
-                                                                                className="me-2 p-2"
-                                                                                to="#"
-                                                                                data-bs-toggle="modal"
-                                                                                data-bs-target="#edit-banip"
-                                                                            >
-                                                                                <i
-                                                                                    data-feather="edit"
-                                                                                    className="feather-edit"
-                                                                                />
-                                                                            </Link>
-                                                                            <Link onClick={showConfirmationAlert}
-                                                                                className="confirm-text p-2"
-                                                                                to="#"
-                                                                            >
-                                                                                <i
-                                                                                    data-feather="trash-2"
-                                                                                    className="feather-trash-2"
-                                                                                />
-                                                                            </Link>
-                                                                        </div>
-                                                                    </td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>
-                                                                        <label className="checkboxs">
-                                                                            <input type="checkbox" />
-                                                                            <span className="checkmarks" />
-                                                                        </label>
-                                                                    </td>
-                                                                    <td>211.12.0.34</td>
-                                                                    <td>
-                                                                        <p>
-                                                                            Temporarily block to protect user accounts from
-                                                                            internet fraudsters.
-                                                                        </p>
-                                                                    </td>
-                                                                    <td>13 Oct 2023</td>
-                                                                    <td className="action-table-data justify-content-end">
-                                                                        <div className="edit-delete-action">
-                                                                            <Link
-                                                                                className="me-2 p-2"
-                                                                                to="#"
-                                                                                data-bs-toggle="modal"
-                                                                                data-bs-target="#edit-banip"
-                                                                            >
-                                                                                <i
-                                                                                    data-feather="edit"
-                                                                                    className="feather-edit"
-                                                                                />
-                                                                            </Link>
-                                                                            <Link onClick={showConfirmationAlert}
-                                                                                className="confirm-text p-2"
-                                                                                to="#"
-                                                                            >
-                                                                                <i
-                                                                                    data-feather="trash-2"
-                                                                                    className="feather-trash-2"
-                                                                                />
-                                                                            </Link>
-                                                                        </div>
-                                                                    </td>
-                                                                </tr>
-                                                            </tbody>
-                                                        </table>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <AddIpAddress/>
-            <EditIpAddress/>
+    // Search by userId or username
+    const matchesSearch =
+      log.userId.toLowerCase().includes(searchLower) ||
+      log.username.toLowerCase().includes(searchLower);
+
+    // Activity filter
+    const matchesActivity = activityType ? log.activity.toLowerCase() === activityType.value : true;
+
+    // IP filter
+    const matchesIP = ipFilter ? log.ip.includes(ipFilter) : true;
+
+    // Date filter
+    const logDate = new Date(log.timestamp);
+    const matchesDate =
+      (!startDate || logDate >= startDate) &&
+      (!endDate || logDate <= endDate);
+
+    return matchesSearch && matchesActivity && matchesIP && matchesDate;
+  });
+
+  // Tooltips
+  const renderRefreshTooltip = (props) => (
+    <Tooltip id="refresh-tooltip" {...props}>
+      Refresh Filters
+    </Tooltip>
+  );
+
+  const renderCollapseTooltip = (props) => (
+    <Tooltip id="collapse-tooltip" {...props}>
+      Collapse Header
+    </Tooltip>
+  );
+
+  return (
+    <div className="content settings-content">
+      <div className="page-header settings-pg-header">
+        <div className="page-title">
+          <h4>User Activity Logs</h4>
+          <h6>Track user actions and audit logs</h6>
         </div>
-    )
-}
+        <ul className="table-top-head">
+          <li>
+            <OverlayTrigger placement="top" overlay={renderRefreshTooltip}>
+              <button
+                type="button"
+                className="btn btn-link p-0"
+                onClick={resetFilters}
+                aria-label="Reset filters"
+              >
+                <RotateCcw />
+              </button>
+            </OverlayTrigger>
+          </li>
+          <li>
+            <OverlayTrigger placement="top" overlay={renderCollapseTooltip}>
+              <button
+                type="button"
+                className={`btn btn-link p-0 ${data ? 'active' : ''}`}
+                onClick={() => dispatch(setToogleHeader(!data))}
+                aria-label="Toggle header"
+              >
+                <ChevronUp />
+              </button>
+            </OverlayTrigger>
+          </li>
+        </ul>
+      </div>
 
-export default BanIpaddress
+      <div className="card table-list-card">
+        <div className="card-body">
+          <div className="table-top d-flex flex-wrap align-items-center gap-3">
+            {/* Search Input */}
+            <div className="search-input flex-grow-1" style={{ minWidth: '250px' }}>
+              <input
+                type="text"
+                placeholder="Search by User ID or Username"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="form-control form-control-sm formsearch"
+                aria-label="Search by User ID or Username"
+              />
+            </div>
 
+            {/* Filter toggle */}
+            <div className="search-path">
+              <button
+                type="button"
+                className={`btn btn-filter ${isFilterVisible ? 'setclose' : ''}`}
+                onClick={toggleFilterVisibility}
+                aria-pressed={isFilterVisible}
+                aria-label={isFilterVisible ? 'Close filters' : 'Open filters'}
+              >
+                <Filter className="filter-icon" />
+                <span>
+                  <ImageWithBasePath src="assets/img/icons/closes.svg" alt="Toggle filter icon" />
+                </span>
+              </button>
+            </div>
+
+            {/* Activity Type Dropdown */}
+            <div className="form-sort" style={{ minWidth: '200px' }}>
+              <Sliders className="info-img" />
+              <Select
+                options={activityOptions}
+                placeholder="Activity Type"
+                onChange={setActivityType}
+                value={activityType}
+                isClearable
+                aria-label="Select activity type"
+              />
+            </div>
+          </div>
+
+          {/* Filter Panel */}
+          {isFilterVisible && (
+            <div className="card visible mt-3" id="filter_inputs" style={{ display: 'block' }}>
+              <div className="card-body pb-0">
+                <div className="row">
+                  <div className="col-lg-3 col-sm-6 col-12">
+                    <div className="input-blocks">
+                      <label htmlFor="startDate">From</label>
+                      <DatePicker
+                        id="startDate"
+                        selected={startDate}
+                        onChange={setStartDate}
+                        placeholderText="Start Date"
+                        className="form-control"
+                        maxDate={endDate || null}
+                        isClearable
+                      />
+                    </div>
+                  </div>
+                  <div className="col-lg-3 col-sm-6 col-12">
+                    <div className="input-blocks">
+                      <label htmlFor="endDate">To</label>
+                      <DatePicker
+                        id="endDate"
+                        selected={endDate}
+                        onChange={setEndDate}
+                        placeholderText="End Date"
+                        className="form-control"
+                        minDate={startDate || null}
+                        isClearable
+                      />
+                    </div>
+                  </div>
+                  <div className="col-lg-3 col-sm-6 col-12">
+                    <div className="input-blocks">
+                      <label htmlFor="ipFilter">IP Address (Optional)</label>
+                      <input
+                        id="ipFilter"
+                        type="text"
+                        className="form-control"
+                        placeholder="e.g. 192.168.0.1"
+                        value={ipFilter}
+                        onChange={(e) => setIpFilter(e.target.value)}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Data Table */}
+          <div className="table-responsive mt-4">
+            <table className="table datanew" role="table" aria-label="User Activity Logs">
+              <thead>
+                <tr>
+                  <th>User ID</th>
+                  <th>Username</th>
+                  <th>Activity</th>
+                  <th>IP Address</th>
+                  <th>Device Info</th>
+                  <th>Action Timestamp</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredData.length === 0 ? (
+                  <tr>
+                    <td colSpan="6" className="text-center text-muted">
+                      No matching logs found.
+                    </td>
+                  </tr>
+                ) : (
+                  filteredData.map((log, idx) => (
+                    <tr key={idx}>
+                      <td>{log.userId}</td>
+                      <td>{log.username}</td>
+                      <td>{log.activity}</td>
+                      <td>{log.ip}</td>
+                      <td>{log.device}</td>
+                      <td>{new Date(log.timestamp).toLocaleString()}</td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default UserActivityLogs;

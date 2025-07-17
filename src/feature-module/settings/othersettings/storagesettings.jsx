@@ -1,155 +1,143 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
-import ImageWithBasePath from '../../../core/img/imagewithbasebath'
-import { ChevronUp, RotateCcw, Settings } from 'feather-icons-react/build/IconComponents'
-import Mail from 'feather-icons-react/build/IconComponents/Mail'
-import AwsSettings from '../../../core/modals/settings/awssettings'
-import { OverlayTrigger, Tooltip } from 'react-bootstrap'
-import { setToogleHeader } from '../../../core/redux/action'
-import { useDispatch, useSelector } from 'react-redux'
-import SettingsSideBar from '../settingssidebar'
+import React, { useState } from 'react';
+import Select from 'react-select';
 
-const StorageSettings = () => {
+const GeoRestrictions = () => {
+    const [username, setUsername] = useState('');
+    const [allowedIps, setAllowedIps] = useState('');
+    const [allowedCountries, setAllowedCountries] = useState([]);
+    const [deviceBinding, setDeviceBinding] = useState(false);
+    const [lastKnownIp] = useState('192.168.1.100'); // Mock data
+    const [lastDeviceInfo] = useState('Chrome on Windows 10'); // Mock data
 
-    const dispatch = useDispatch();
-    const data = useSelector((state) => state.toggle_header);
-    const renderRefreshTooltip = (props) => (
-        <Tooltip id="refresh-tooltip" {...props}>
-            Refresh
-        </Tooltip>
-    );
-    const renderCollapseTooltip = (props) => (
-        <Tooltip id="refresh-tooltip" {...props}>
-            Collapse
-        </Tooltip>
-    )
+    const countries = [
+        { value: 'US', label: 'United States' },
+        { value: 'KE', label: 'Kenya' },
+        { value: 'UK', label: 'United Kingdom' },
+        { value: 'SO', label: 'Somalia' },
+        { value: 'UG', label: 'Uganda' },
+        // Add more as needed
+    ];
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        const data = {
+            username,
+            allowedIps,
+            allowedCountries: allowedCountries.map(c => c.value),
+            deviceBinding,
+        };
+        console.log('Submitted Data:', data);
+        alert('Geo/IP restriction settings saved.');
+    };
+
     return (
-        <div>
-            <div className="page-wrapper">
-                <div className="content settings-content">
-                    <div className="page-header settings-pg-header">
-                        <div className="add-item d-flex">
-                            <div className="page-title">
-                                <h4>Settings</h4>
-                                <h6>Manage your settings on portal</h6>
-                            </div>
-                        </div>
-                        <ul className="table-top-head">
-                        <li>
-                            <OverlayTrigger placement="top" overlay={renderRefreshTooltip}>
+       <div className="row">
+            <h3>Geo/IP Restrictions</h3>
+            <p>Configure access restrictions based on IP, location, and device</p>
 
-                                <Link data-bs-toggle="tooltip" data-bs-placement="top">
-                                    <RotateCcw />
-                                </Link>
-                            </OverlayTrigger>
-                        </li>
-                        <li>
-                            <OverlayTrigger placement="top" overlay={renderCollapseTooltip}>
-
-                                <Link
-                                    data-bs-toggle="tooltip"
-                                    data-bs-placement="top"
-                                    id="collapse-header"
-                                    className={data ? "active" : ""}
-                                    onClick={() => { dispatch(setToogleHeader(!data)) }}
-                                >
-                                    <ChevronUp />
-                                </Link>
-                            </OverlayTrigger>
-                        </li>
-                    </ul>
+            <form onSubmit={handleSubmit} className="mt-4">
+                {/* Username */}
+                <div className="mb-3 row">
+                    <label className="col-sm-3 col-form-label">User ID or Username</label>
+                    <div className="col-sm-6">
+                        <input
+                            type="text"
+                            className="form-control"
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
+                        />
                     </div>
-                    <div className="row">
-                        <div className="col-xl-12">
-                            <div className="settings-wrapper d-flex">
-                            <SettingsSideBar/>
-                                <div className="settings-page-wrap">
-                                    <div className="setting-title">
-                                        <h4>Storage</h4>
-                                    </div>
-                                    <div className="page-header text-end justify-content-end">
-                                        <Link to="#" className="btn-added btn-primary">
-                                            <Mail className="me-2" />
-                                            Send test email
-                                        </Link>
-                                    </div>
-                                    <div className="row">
-                                        <div className="col-xxl-4 col-lg-6 col-md-4 col-sm-6 d-flex">
-                                            <div className="connected-app-card d-flex w-100">
-                                                <ul className="w-100 d-flex justify-content-between align-items-center">
-                                                    <li className="storage-icon mb-0">
-                                                        <span className="system-app-icon">
-                                                            <ImageWithBasePath
-                                                                src="assets/img/icons/storage-icon-01.svg"
-                                                                alt=""
-                                                            />
-                                                        </span>
-                                                        <h6>Local Storage</h6>
-                                                    </li>
-                                                    <li className="setting-gateway d-flex align-items-center">
-                                                        <Link to="#">
-                                                            <Settings className="me-2" />
-                                                        </Link>
-                                                        <div className="status-toggle modal-status d-flex justify-content-between align-items-center ms-2">
-                                                            <input
-                                                                type="checkbox"
-                                                                id="user1"
-                                                                className="check"
-                                                                defaultChecked="true"
-                                                            />
-                                                            <label htmlFor="user1" className="checktoggle">
-                                                                {" "}
-                                                            </label>
-                                                        </div>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                        <div className="col-xl-4 col-lg-6 col-md-4 col-sm-6 d-flex">
-                                            <div className="connected-app-card d-flex w-100">
-                                                <ul className="w-100 d-flex justify-content-between align-items-center">
-                                                    <li className="storage-icon mb-0">
-                                                        <span className="system-app-icon">
-                                                            <ImageWithBasePath
-                                                                src="assets/img/icons/storage-icon-02.svg"
-                                                                alt=""
-                                                            />
-                                                        </span>
-                                                        <h6>AWS</h6>
-                                                    </li>
-                                                    <li className="setting-gateway d-flex align-items-center">
-                                                        <Link
-                                                            to="#"
-                                                            data-bs-toggle="modal"
-                                                            data-bs-target="#aws-config"
-                                                        >
-                                                            <Settings className="me-2" />
-                                                        </Link>
-                                                        <div className="status-toggle modal-status d-flex justify-content-between align-items-center ms-2">
-                                                            <input
-                                                                type="checkbox"
-                                                                id="user2"
-                                                                className="check"
-                                                                defaultChecked="true"
-                                                            />
-                                                            <label htmlFor="user2" className="checktoggle">
-                                                                {" "}
-                                                            </label>
-                                                        </div>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                </div>
+
+                {/* Allowed IPs/Subnets */}
+                <div className="mb-3 row">
+                    <label className="col-sm-3 col-form-label">Allowed IPs/Subnets</label>
+                    <div className="col-sm-6">
+                        <textarea
+                            className="form-control"
+                            rows="3"
+                            value={allowedIps}
+                            onChange={(e) => setAllowedIps(e.target.value)}
+                            placeholder="e.g., 192.168.1.0/24, 10.0.0.1"
+                        />
+                        <small className="form-text text-muted">
+                            Separate multiple IPs/subnets with commas.
+                        </small>
+                    </div>
+                </div>
+
+                {/* Allowed Countries */}
+                <div className="mb-3 row">
+                    <label className="col-sm-3 col-form-label">Allowed Countries</label>
+                    <div className="col-sm-6">
+                        <Select
+                            isMulti
+                            options={countries}
+                            value={allowedCountries}
+                            onChange={setAllowedCountries}
+                            className="select"
+                            placeholder="Select allowed countries"
+                        />
+                    </div>
+                </div>
+
+                {/* Device Binding */}
+                <div className="mb-3 row">
+                    <label className="col-sm-3 col-form-label">Device Binding</label>
+                    <div className="col-sm-6">
+                        <div className="form-check form-switch">
+                            <input
+                                className="form-check-input"
+                                type="checkbox"
+                                id="deviceBindingSwitch"
+                                checked={deviceBinding}
+                                onChange={(e) => setDeviceBinding(e.target.checked)}
+                            />
+                            <label className="form-check-label" htmlFor="deviceBindingSwitch">
+                                {deviceBinding ? 'Enabled' : 'Disabled'}
+                            </label>
                         </div>
                     </div>
                 </div>
-            </div>
-            <AwsSettings/>
-        </div>
-    )
-}
 
-export default StorageSettings
+                {/* Last Known IP */}
+                <div className="mb-3 row">
+                    <label className="col-sm-3 col-form-label">Last Known IP</label>
+                    <div className="col-sm-6">
+                        <input
+                            type="text"
+                            className="form-control"
+                            value={lastKnownIp}
+                            readOnly
+                        />
+                    </div>
+                </div>
+
+                {/* Last Device Info */}
+                <div className="mb-3 row">
+                    <label className="col-sm-3 col-form-label">Last Device Info</label>
+                    <div className="col-sm-6">
+                        <input
+                            type="text"
+                            className="form-control"
+                            value={lastDeviceInfo}
+                            readOnly
+                        />
+                    </div>
+                </div>
+
+                {/* Buttons */}
+                <div className="mt-4">
+                    <button type="submit" className="btn btn-primary me-2">
+                        Save Changes
+                    </button>
+                    <button type="button" className="btn btn-secondary">
+                        Cancel
+                    </button>
+                </div>
+            </form>
+        </div>
+    );
+};
+
+export default GeoRestrictions;

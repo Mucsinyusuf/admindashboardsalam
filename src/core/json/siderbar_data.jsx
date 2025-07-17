@@ -44,20 +44,11 @@ export const SidebarData = [
     submenu: true,
     showSubRoute: false,
     submenuItems: [
-      { label: "Manage Users", link: "/users", icon: <Icon.Users /> },
+      { label: "Manage Users", link: "/manage-users", icon: <Icon.Users /> },
       { label: "Role & Permission(RBAC)", link: "/roles-permissions", icon: <Icon.Shield /> },
-      {
-        label: "User Activity Logs",
-        submenu: true,
-        showSubRoute: false,
-        submenuItems: [
-          { label: "Sign In", link: "/signin" },
-          { label: "Register", link: "/register" },
-          { label: "Delete", link: "/delete-account", icon: <Icon.UserX /> },
-          { label: "OTP", link: "/otp-settings" },
-          { label: "Geo/IP Restrictions", link: "/ban-ip-address" },
-        ],
-      },
+      { label: "User Activity Logs", link: "/user-activity-logs", icon: <Icon.List /> },
+      { label: "OTP", link: "/otp-settings", icon: <Icon.Hash /> },
+      { label: "Geo/IP Restrictions", link: "/Geo/IP-restrictions", icon: <Icon.Globe /> },
     ],
   },
   {

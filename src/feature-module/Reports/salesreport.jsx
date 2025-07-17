@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Breadcrumbs from "../../core/breadcrumbs";
 import ImageWithBasePath from "../../core/img/imagewithbasebath";
 import { Link } from "react-router-dom";
-import { Filter, Sliders, Box, Zap } from "react-feather";
+import { Filter, Box, Zap } from "react-feather";
 import Select from "react-select";
 
 const SalesReport = () => {
@@ -72,8 +72,6 @@ const SalesReport = () => {
                 </Link>
               </div>
               <div className="form-sort stylewidth">
-                <Sliders className="info-img" />
-
                 <Select
                   className="select "
                   options={options}
@@ -105,10 +103,7 @@ const SalesReport = () => {
                     <div className="input-blocks">
                       <Link className="btn btn-filters ms-auto">
                         {" "}
-                        <i
-                          data-feather="search"
-                          className="feather-search"
-                        />{" "}
+                        <i data-feather="search" className="feather-search" />{" "}
                         Search{" "}
                       </Link>
                     </div>

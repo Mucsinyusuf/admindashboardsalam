@@ -3,22 +3,25 @@ import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import { useAuth } from "../../../context/AuthContext";
 import {
-  TextField,
-  Button,
   Alert,
   Typography,
+  Box,
+  TextField,
+  CircularProgress,
 } from "@mui/material";
 import { motion } from "framer-motion";
 import bgImage from "../../../assets/img/company/AdminDashboardBackground@2x.png";
 
+const OTP_LENGTH = 6;
+
 const OTPVerify = () => {
-  const [otp, setOtp] = useState("");
+  const [otp, setOtp] = useState(new Array(OTP_LENGTH).fill(""));
   const [username, setUsername] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const { login } = useAuth();
   const navigate = useNavigate();
-  const inputRef = useRef(null);
+  const inputsRef = useRef([]);
 
   useEffect(() => {
     const raw = Cookies.get("pendingLogin");
@@ -37,11 +40,45 @@ const OTPVerify = () => {
   }, [navigate]);
 
   useEffect(() => {
-    inputRef.current?.focus(); // Automatically focus OTP field
+    inputsRef.current[0]?.focus();
   }, []);
 
-  const handleVerify = async (e) => {
-    e.preventDefault();
+  useEffect(() => {
+    const allFilled = otp.every((digit) => digit !== "");
+    if (allFilled && !loading) {
+      handleVerify(otp.join(""));
+    }
+  }, [otp]);
+
+  const handleChange = (element, index) => {
+    const val = element.value.replace(/\D/, "");
+    if (!val) return;
+
+    const newOtp = [...otp];
+    newOtp[index] = val;
+    setOtp(newOtp);
+
+    if (index < OTP_LENGTH - 1) {
+      inputsRef.current[index + 1]?.focus();
+    }
+  };
+
+  const handleKeyDown = (e, index) => {
+    if (e.key === "Backspace") {
+      const newOtp = [...otp];
+      if (otp[index]) {
+        newOtp[index] = "";
+        setOtp(newOtp);
+      } else if (index > 0) {
+        inputsRef.current[index - 1]?.focus();
+        const backOtp = [...otp];
+        backOtp[index - 1] = "";
+        setOtp(backOtp);
+      }
+    }
+  };
+
+  const handleVerify = async (enteredOtp) => {
     setLoading(true);
     setError("");
 
@@ -49,7 +86,7 @@ const OTPVerify = () => {
       const res = await fetch("/auth/verify-otp", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, otp }),
+        body: JSON.stringify({ username, otp: enteredOtp }),
       });
 
       const data = await res.json();
@@ -67,6 +104,8 @@ const OTPVerify = () => {
     } catch (err) {
       console.error("OTP Error:", err);
       setError(err.message || "OTP verification failed.");
+      setOtp(new Array(OTP_LENGTH).fill(""));
+      inputsRef.current[0]?.focus();
     } finally {
       setLoading(false);
     }
@@ -119,48 +158,51 @@ const OTPVerify = () => {
           Enter the OTP sent to your email or phone
         </Typography>
 
-        <form onSubmit={handleVerify}>
-          <TextField
-            inputRef={inputRef}
-            label="Enter OTP"
-            variant="outlined"
-            fullWidth
-            margin="normal"
-            type="password"
-            value={otp}
-            onChange={(e) => setOtp(e.target.value)}
-            required
-           InputProps={{
-    style: {
-      color: "#212121",
-      fontSize: "35px",       
-      fontWeight: "bold",     
-      letterSpacing: "8px",   
-    },
-  }}
-  InputLabelProps={{
-    style: { color: "#666" },
-  }}
-/>
+        <Box display="flex" justifyContent="space-between" gap={1} mb={3}>
+          {otp.map((digit, idx) => (
+            <TextField
+              key={idx}
+              inputRef={(el) => (inputsRef.current[idx] = el)}
+              value={digit ? "*" : ""}
+              onChange={(e) => handleChange(e.target, idx)}
+              onKeyDown={(e) => handleKeyDown(e, idx)}
+              type="text"
+              inputProps={{
+                maxLength: 1,
+                inputMode: "numeric",
+                style: {
+                  textAlign: "center",
+                  fontSize: "28px",
+                  fontWeight: "bold",
+                  letterSpacing: "2px",
+                  padding: "10px",
+                },
+                onPaste: (e) => e.preventDefault(),
+              }}
+              sx={{
+                width: "48px",
+                "& .MuiInputBase-root": {
+                  color: "#212121",
+                  background: "#fff",
+                  borderRadius: "10px",
+                },
+              }}
+              disabled={loading}
+            />
+          ))}
+        </Box>
 
-          {error && (
-            <Alert severity="error" className="mt-2">
-              {error}
-            </Alert>
-          )}
+        {loading && (
+          <Box display="flex" justifyContent="center" mt={2}>
+            <CircularProgress size={28} />
+          </Box>
+        )}
 
-          <Button
-            variant="contained"
-            color="primary"
-            fullWidth
-            type="submit"
-            className="mt-4"
-            disabled={loading}
-            style={{ fontWeight: "bold" }}
-          >
-            {loading ? "Verifying..." : "Verify OTP"}
-          </Button>
-        </form>
+        {error && (
+          <Alert severity="error" className="mt-2">
+            {error}
+          </Alert>
+        )}
       </motion.div>
     </div>
   );

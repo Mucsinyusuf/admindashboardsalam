@@ -35,13 +35,14 @@ import CurrencySettings from "../feature-module/settings/financialsettings/curre
 import InvoiceReport from "../feature-module/sales/invoicereport";
 import Users from "../feature-module/usermanagement/users";
 import RolesPermissions from "../feature-module/usermanagement/rolespermissions";
-import Register from "../feature-module/pages/register/register";
+import GeoRestrictions from "../feature-module/settings/othersettings/storagesettings";
 import DeleteAccount from "../feature-module/usermanagement/deleteaccount";
 import OtpSettings from "../feature-module/settings/systemsettings/otpsettings";
-import BanIpaddress from "../feature-module/settings/othersettings/ban-ipaddress";
-import BrandList from "../feature-module/inventory/brandlist";
+import UserActivityLogs from "../feature-module/settings/othersettings/ban-ipaddress";
+import ComplianceAlertList from "../feature-module/inventory/brandlist";
 import CategoryList from "../feature-module/inventory/categorylist";
 import EditProduct from "../feature-module/inventory/editproduct";
+
 
 
 
@@ -65,7 +66,7 @@ const protectedRoutes = [
   { path: "/overview", component: Dashboard },
   { path: "/system-health", component: EditProduct },
   { path: "/transaction-analytics", component: SalesDashboard },
-  { path: "/compliance", component: BrandList },
+  { path: "/compliance", component: ComplianceAlertList},
   { path: "/heatmap", component: CategoryList},
 
   { path: "/corporate-onboarding", component: CustomerOnboarding },
@@ -76,12 +77,12 @@ const protectedRoutes = [
   { path: "/companysignatories", component: CompanySignatories },
   { path: "/accountTypes", component: AccountTypes },
 
-  { path: "/users", component: Users },
+  { path: "/manage-users", component: Users },
   { path: "/roles-permissions", component: RolesPermissions },
-  { path: "/register", component: Register },
+  { path: "/Geo/IP-restrictions", component: GeoRestrictions },
   { path: "/delete-account", component: DeleteAccount },
   { path: "/otp-settings", component: OtpSettings},
-  { path: "/ban-ip-address", component: BanIpaddress },
+  { path: "/user-activity-logs", component: UserActivityLogs},
 
   { path: "/sales-list", component: SalesList },
   { path: "/invoice-report", component: InvoiceReport },
