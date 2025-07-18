@@ -1,269 +1,298 @@
 import React, { useState } from 'react';
-import { OverlayTrigger, Tooltip } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
-import ImageWithBasePath from '../../core/img/imagewithbasebath';
-import { ChevronUp } from 'feather-icons-react/build/IconComponents';
-import { setToogleHeader } from '../../core/redux/action';
-import { useDispatch, useSelector } from 'react-redux';
-import { Filter, PlusCircle, Sliders, StopCircle, User, Zap } from 'react-feather';
+import { Filter, Sliders, MoreVertical } from 'react-feather';
 import Select from 'react-select';
 import withReactContent from 'sweetalert2-react-content';
 import Swal from 'sweetalert2';
+import { Link } from 'react-router-dom';
+ 
 import Table from '../../core/pagination/datatable';
 import AddUsers from '../../core/modals/usermanagement/addusers';
 import EditUser from '../../core/modals/usermanagement/edituser';
-
+ 
 const Users = () => {
-  const dispatch = useDispatch();
-  const data = useSelector((state) => state.toggle_header);
-  const dataSource = useSelector((state) => state.userlist_data);
-
   const [isFilterVisible, setIsFilterVisible] = useState(false);
-  const [searchTerm, setSearchTerm] = useState("");
-
-  const toggleFilterVisibility = () => setIsFilterVisible(prev => !prev);
-
+  const [searchTerm, setSearchTerm] = useState('');
+  const [editModalVisible, setEditModalVisible] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null);
+ 
   const MySwal = withReactContent(Swal);
-
-  const showConfirmationAlert = () => {
+ 
+  const handleEdit = (user) => {
+    setSelectedUser(user);
+    setEditModalVisible(true);
+  };
+ 
+  const handleDelete = () => {
     MySwal.fire({
       title: 'Are you sure?',
       text: "You won't be able to revert this!",
+      icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#00ff00',
-      confirmButtonText: 'Yes, delete it!',
       cancelButtonColor: '#ff0000',
-      cancelButtonText: 'Cancel',
+      confirmButtonText: 'Yes, delete it!',
     }).then((result) => {
       if (result.isConfirmed) {
-        MySwal.fire({
-          title: 'Deleted!',
-          text: 'User has been deleted.',
-          confirmButtonText: 'OK',
-          customClass: {
-            confirmButton: 'btn btn-success',
-          },
-        });
+        MySwal.fire('Deleted!', 'User has been deleted.', 'success');
       }
     });
   };
-
-  const renderCollapseTooltip = (props) => (
-    <Tooltip id="collapse-tooltip" {...props}>
-      Collapse
-    </Tooltip>
+ 
+  const dummyUsers = [
+    {
+      fullname: 'John Doe',
+      username: 'jdoe',
+      email: 'jdoe@example.com',
+      phone: '1234567890',
+      role: 'Admin',
+      status: 'Active',
+      companyId: 'C001',
+      departments: ['Finance', 'HR'],
+      lastLogin: '2025-07-18 09:15',
+    },
+    {
+      fullname: 'Jane Smith',
+      username: 'jsmith',
+      email: 'jsmith@example.com',
+      phone: '9876543210',
+      role: 'Checker',
+      status: 'Suspended',
+      companyId: 'C002',
+      departments: ['Operations'],
+      lastLogin: '2025-07-17 16:30',
+    },
+    {
+      fullname: 'Ali Khan',
+      username: 'akhan',
+      email: 'ali.khan@example.com',
+      phone: '1112223333',
+      role: 'Maker',
+      status: 'Locked',
+      companyId: 'C003',
+      departments: ['HR'],
+      lastLogin: '2025-07-16 10:45',
+    },
+    {
+      fullname: 'Mary Wambui',
+      username: 'mwambui',
+      email: 'mary.w@example.com',
+      phone: '0712345678',
+      role: 'Viewer',
+      status: 'Active',
+      companyId: 'C004',
+      departments: ['Finance'],
+      lastLogin: '2025-07-15 12:00',
+    },
+    {
+      fullname: 'David Otieno',
+      username: 'dotieno',
+      email: 'david.o@example.com',
+      phone: '0789123456',
+      role: 'Admin',
+      status: 'Suspended',
+      companyId: 'C005',
+      departments: ['Operations', 'HR'],
+      lastLogin: '2025-07-14 08:30',
+    },
+    {
+      fullname: 'Aisha Abdi',
+      username: 'aabdi',
+      email: 'aisha.a@example.com',
+      phone: '0700111222',
+      role: 'Checker',
+      status: 'Active',
+      companyId: 'C006',
+      departments: ['Finance'],
+      lastLogin: '2025-07-13 18:20',
+    },
+    {
+      fullname: 'Brian Kimani',
+      username: 'bkimani',
+      email: 'brian.k@example.com',
+      phone: '0799001122',
+      role: 'Maker',
+      status: 'Locked',
+      companyId: 'C007',
+      departments: ['Operations'],
+      lastLogin: '2025-07-12 14:55',
+    },
+    {
+      fullname: 'Fatma Said',
+      username: 'fsaid',
+      email: 'fatma.s@example.com',
+      phone: '0755123456',
+      role: 'Viewer',
+      status: 'Active',
+      companyId: 'C008',
+      departments: ['HR', 'Finance'],
+      lastLogin: '2025-07-11 11:00',
+    },
+    {
+      fullname: 'Samuel Njoroge',
+      username: 'snjoroge',
+      email: 'samuel.n@example.com',
+      phone: '0711999888',
+      role: 'Checker',
+      status: 'Active',
+      companyId: 'C009',
+      departments: ['Operations'],
+      lastLogin: '2025-07-10 17:15',
+    },
+    {
+      fullname: 'Grace Muthoni',
+      username: 'gmuthoni',
+      email: 'grace.m@example.com',
+      phone: '0700554433',
+      role: 'Admin',
+      status: 'Suspended',
+      companyId: 'C010',
+      departments: ['Finance', 'HR'],
+      lastLogin: '2025-07-09 13:45',
+    },
+  ];
+ 
+  const filteredUsers = dummyUsers.filter((user) =>
+    [user.fullname, user.username, user.email, user.phone]
+      .some((field) => field?.toLowerCase().includes(searchTerm.toLowerCase()))
   );
-
-  const oldandlatestvalue = [
-    { value: 'date', label: 'Sort by Date' },
-    { value: 'newest', label: 'Newest' },
-    { value: 'oldest', label: 'Oldest' },
-  ];
-
-  const roleOptions = [
-    { value: 'Maker', label: 'Maker' },
-    { value: 'Checker', label: 'Checker' },
-    { value: 'Admin', label: 'Admin' },
-    { value: 'Viewer', label: 'Viewer' },
-  ];
-
-  const statusOptions = [
-    { value: 'Active', label: 'Active' },
-    { value: 'Suspended', label: 'Suspended' },
-    { value: 'Locked', label: 'Locked' },
-  ];
-
-  const departments = [
-    { value: 'Finance', label: 'Finance' },
-    { value: 'HR', label: 'HR' },
-    { value: 'Operations', label: 'Operations' },
-  ];
-
+ 
   const columns = [
     {
-      title: "Full Name",
-      dataIndex: "fullname",
-      sorter: (a, b) => a.fullname.localeCompare(b.fullname),
+      title: 'Full Name',
+      dataIndex: 'fullname',
     },
     {
-      title: "Username",
-      dataIndex: "username",
-      sorter: (a, b) => a.username.localeCompare(b.username),
+      title: 'Username',
+      dataIndex: 'username',
     },
     {
-      title: "Email Address",
-      dataIndex: "email",
-      sorter: (a, b) => a.email.localeCompare(b.email),
+      title: 'Email',
+      dataIndex: 'email',
     },
     {
-      title: "Phone Number",
-      dataIndex: "phone",
-      sorter: (a, b) => a.phone.localeCompare(b.phone),
+      title: 'Phone',
+      dataIndex: 'phone',
     },
     {
-      title: "User Role",
-      dataIndex: "role",
-      sorter: (a, b) => a.role.localeCompare(b.role),
+      title: 'Role',
+      dataIndex: 'role',
     },
     {
-      title: "Account Status",
-      dataIndex: "status",
-      render: (text) => (
-        <span className={`badge ${text === "Active" ? "badge-linesuccess" : "badge-linedanger"}`}>
-          {text}
+      title: 'Status',
+      dataIndex: 'status',
+      render: (status) => (
+        <span className={`badge ${status === 'Active' ? 'badge-linesuccess' : 'badge-linedanger'}`}>
+          {status}
         </span>
       ),
-      sorter: (a, b) => a.status.localeCompare(b.status),
     },
     {
-      title: "Company ID",
-      dataIndex: "companyId",
+      title: 'Company ID',
+      dataIndex: 'companyId',
     },
     {
-      title: "Assigned Departments/Branches",
-      dataIndex: "departments",
-      render: (departments) => departments?.join(', '),
+      title: 'Departments',
+      dataIndex: 'departments',
+      render: (depts) => depts?.join(', '),
     },
     {
-      title: "Last Login",
-      dataIndex: "lastLogin",
+      title: 'Last Login',
+      dataIndex: 'lastLogin',
     },
     {
       title: 'Actions',
-      dataIndex: 'actions',
-      render: () => (
-        <div className="edit-delete-action">
-          <Link className="me-2 p-2" to="#"><i data-feather="eye" className="feather-eye" /></Link>
-          <Link className="me-2 p-2" to="#" data-bs-toggle="modal" data-bs-target="#edit-units"><i data-feather="edit" className="feather-edit" /></Link>
-          <Link className="confirm-text p-2" to="#"><i data-feather="trash-2" onClick={showConfirmationAlert} /></Link>
+      render: (_, user) => (
+        <div className="dropdown action-dropdown">
+          <button className="btn btn-sm" data-bs-toggle="dropdown" aria-expanded="false">
+            <MoreVertical />
+          </button>
+          <ul className="dropdown-menu">
+            <li><Link to="#" className="dropdown-item">View</Link></li>
+            <li><button className="dropdown-item" onClick={() => handleEdit(user)}>Edit</button></li>
+            <li><button className="dropdown-item text-danger" onClick={handleDelete}>Delete</button></li>
+          </ul>
         </div>
       ),
     },
   ];
-
-  // ✅ Filtered users based on search
-  const filteredData = dataSource?.filter(user => {
-    const term = searchTerm.toLowerCase();
-    return (
-      user.fullname?.toLowerCase().includes(term) ||
-      user.username?.toLowerCase().includes(term) ||
-      user.email?.toLowerCase().includes(term) ||
-      user.phone?.toLowerCase().includes(term)
-    );
-  });
-
+ 
   return (
     <div className="row">
       <div className="content">
-        <div className="page-header">
-          <div className="add-item d-flex">
-            <div className="page-title">
-              <h4>Manage Users</h4>
-              <h6>View and control access</h6>
-            </div>
+        <div className="page-header d-flex justify-content-between align-items-center">
+          <div>
+            <h4>Manage Users</h4>
+            <h6>View and control access</h6>
           </div>
-
-          <ul className="table-top-head">
-            <li>
-              <OverlayTrigger placement="top" overlay={renderCollapseTooltip}>
-                <Link
-                  id="collapse-header"
-                  className={data ? "active" : ""}
-                  onClick={() => dispatch(setToogleHeader(!data))}
-                >
-                  <ChevronUp />
-                </Link>
-              </OverlayTrigger>
-            </li>
-          </ul>
-
-          <div className="page-btn">
-            <a to="#" className="btn btn-added" data-bs-toggle="modal" data-bs-target="#add-units">
-              <PlusCircle className="me-2" />
-              Add New User
-            </a>
-          </div>
+         
         </div>
-
+ 
         <div className="card table-list-card">
           <div className="card-body">
-            <div className="table-top">
-              <div className="search-set">
-                <div className="search-input">
-                  <input
-                    type="text"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    placeholder="Search"
-                    className="form-control form-control-sm formsearch"
+            <div className="table-top d-flex justify-content-between">
+              <div className="search-input">
+                <input
+                  type="text"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  placeholder="Search"
+                  className="form-control form-control-sm"
+                />
+              </div>
+ 
+              <div className="d-flex align-items-center gap-2">
+                <button className={`btn btn-filter ${isFilterVisible ? 'setclose' : ''}`} onClick={() => setIsFilterVisible(!isFilterVisible)}>
+                  <Filter />
+                </button>
+                <div className="form-sort d-flex align-items-center">
+                  <Sliders />
+                  <Select
+                    className="ms-2"
+                    options={[
+                      { value: 'date', label: 'Sort by Date' },
+                      { value: 'newest', label: 'Newest' },
+                      { value: 'oldest', label: 'Oldest' },
+                    ]}
+                    placeholder="Sort by"
                   />
-                  <Link to="#" className="btn btn-searchset">
-                    <i data-feather="search" className="feather-search" />
-                  </Link>
                 </div>
               </div>
-
-              <div className="search-path">
-                <Link className={`btn btn-filter ${isFilterVisible ? "setclose" : ""}`}>
-                  <Filter className="filter-icon" onClick={toggleFilterVisibility} />
-                  <span onClick={toggleFilterVisibility}>
-                    <ImageWithBasePath src="assets/img/icons/closes.svg" alt="img" />
-                  </span>
-                </Link>
-              </div>
-
-              <div className="form-sort">
-                <Sliders className="info-img" />
-                <Select className="select" options={oldandlatestvalue} placeholder="Sort by" />
-              </div>
             </div>
-
+ 
             {isFilterVisible && (
-              <div className="card" id="filter_inputs">
-                <div className="card-body pb-0">
+              <div className="card mt-3" id="filter_inputs">
+                <div className="card-body">
                   <div className="row">
-                    <div className="col-lg-3 col-sm-6 col-12">
-                      <div className="input-blocks">
-                        <User className="info-img" />
-                        <Select className="select" options={roleOptions} placeholder="User Role" />
-                      </div>
-                    </div>
-                    <div className="col-lg-3 col-sm-6 col-12">
-                      <div className="input-blocks">
-                        <StopCircle className="info-img" />
-                        <Select className="select" options={statusOptions} placeholder="Account Status" />
-                      </div>
-                    </div>
-                    <div className="col-lg-3 col-sm-6 col-12">
-                      <div className="input-blocks">
-                        <Zap className="info-img" />
-                        <Select className="select" isMulti options={departments} placeholder="Departments/Branches" />
-                      </div>
-                    </div>
-                    <div className="col-lg-3 col-sm-6 col-12">
-                      <div className="input-blocks">
-                        <a className="btn btn-filters ms-auto">
-                          <i data-feather="search" className="feather-search" /> Search
-                        </a>
-                      </div>
+                    <div className="col-md-3"><Select placeholder="User Role" /></div>
+                    <div className="col-md-3"><Select placeholder="Status" /></div>
+                    <div className="col-md-3"><Select isMulti placeholder="Departments" /></div>
+                    <div className="col-md-3">
+                      <button className="btn btn-filters w-100"><i className="feather-search" /> Search</button>
                     </div>
                   </div>
                 </div>
               </div>
             )}
-
-            <div className="table-responsive">
-              <Table columns={columns} dataSource={filteredData} />
+ 
+            <div className="table-responsive mt-3">
+              <Table columns={columns} dataSource={filteredUsers} />
             </div>
           </div>
         </div>
       </div>
-
-      {/* Modals */}
+ 
       <AddUsers />
-      <EditUser />
+      {editModalVisible && (
+        <EditUser
+          show={editModalVisible}
+          onHide={() => setEditModalVisible(false)}
+          user={selectedUser}
+        />
+      )}
     </div>
   );
 };
-
+ 
 export default Users;
+ 
+ 

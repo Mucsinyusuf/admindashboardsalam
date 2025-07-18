@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { ChevronUp } from 'feather-icons-react/build/IconComponents';
 import { useDispatch, useSelector } from 'react-redux';
 import Select from 'react-select';
@@ -10,25 +10,9 @@ import { setToogleHeader } from '../../core/redux/action';
 
 const AccessRights = () => {
   const dispatch = useDispatch();
-  const data = useSelector((state) => state.toggle_header);
-
-  const users = [
-    { value: 'admin', label: 'Admin' },
-    { value: 'manager', label: 'Manager' },
-    { value: 'employee', label: 'Employee' }
-  ];
-
-  const modules = [
-    { label: 'Dashboards', value: 'dashboards' },
-    { label: 'Transfers', value: 'transfers' },
-    { label: 'Payroll', value: 'payroll' },
-    { label: 'Inventory', value: 'inventory' }
-  ];
-
-  const geolocationOptions = [
-    { value: 'enabled', label: 'Enabled' },
-    { value: 'disabled', label: 'Disabled' }
-  ];
+  const navigate = useNavigate();
+  const toggleHeader = useSelector((state) => state.toggle_header);
+  const lookupData = useSelector((state) => state.lookup); // Assume this is where lookup info is stored
 
   const [formState, setFormState] = useState({
     user: null,
@@ -40,8 +24,32 @@ const AccessRights = () => {
     geolocation: null,
     accessEnabled: false,
     auditTrail: false,
-    remarks: ''
+    remarks: '',
   });
+
+  const users = (lookupData?.users || []).map((user) => ({
+    value: user.email,
+    label: user.full_name || user.email,
+  }));
+
+  const modules = [
+    { label: 'Dashboards', value: 'dashboards' },
+    { label: 'Transfers', value: 'transfers' },
+    { label: 'Payroll', value: 'payroll' },
+    { label: 'Inventory', value: 'inventory' },
+  ];
+
+  const geolocationOptions = [
+    { value: 'enabled', label: 'Enabled' },
+    { value: 'disabled', label: 'Disabled' },
+  ];
+
+  // Autofill default user if data is available
+  useEffect(() => {
+    if (!formState.user && users.length > 0) {
+      setFormState((prev) => ({ ...prev, user: users[0] }));
+    }
+  }, [users]);
 
   const handleInputChange = (field, value) => {
     setFormState((prev) => ({ ...prev, [field]: value }));
@@ -54,10 +62,22 @@ const AccessRights = () => {
     handleInputChange('modules', updated);
   };
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    const submissionData = {
+      ...formState,
+      lookupInfo: lookupData,
+    };
+
+    // Pass full data to the next step (Profile Management)
+    sessionStorage.setItem('access_rights_data', JSON.stringify(submissionData));
+    navigate('/profile-management');
+  };
+
   return (
     <div className="row">
       <div className="content">
-        {/* Header */}
         <div className="page-header">
           <div className="add-item d-flex">
             <div className="page-title">
@@ -70,8 +90,8 @@ const AccessRights = () => {
               <OverlayTrigger placement="top" overlay={<Tooltip>Collapse</Tooltip>}>
                 <Link
                   id="collapse-header"
-                  className={data ? 'active' : ''}
-                  onClick={() => dispatch(setToogleHeader(!data))}
+                  className={toggleHeader ? 'active' : ''}
+                  onClick={() => dispatch(setToogleHeader(!toggleHeader))}
                 >
                   <ChevronUp />
                 </Link>
@@ -80,11 +100,9 @@ const AccessRights = () => {
           </ul>
         </div>
 
-        {/* Card */}
         <div className="card">
           <div className="card-body">
-            <form>
-              {/* User + Modules */}
+            <form onSubmit={handleSubmit}>
               <div className="row">
                 <div className="col-lg-4">
                   <label>User/Group</label>
@@ -115,7 +133,6 @@ const AccessRights = () => {
                 </div>
               </div>
 
-              {/* Limits + IP */}
               <div className="row mt-3">
                 <div className="col-lg-4">
                   <label>Transaction Limit (Daily)</label>
@@ -147,12 +164,10 @@ const AccessRights = () => {
                 </div>
               </div>
 
-              {/* Schedule + Geo + Switches */}
               <div className="row mt-3">
-                <div className="col-lg-4 ">
-                  
+                <div className="col-lg-4">
                   <label>Access Schedule</label>
-                  <br/>
+                  <br />
                   <TimePicker.RangePicker
                     format="HH:mm"
                     onChange={(value) => handleInputChange('accessSchedule', value)}
@@ -169,25 +184,20 @@ const AccessRights = () => {
                 </div>
                 <div className="col-lg-2">
                   <label>Enable Access</label>
-                  <div>
-                    <Switch
-                      checked={formState.accessEnabled}
-                      onChange={(checked) => handleInputChange('accessEnabled', checked)}
-                    />
-                  </div>
+                  <Switch
+                    checked={formState.accessEnabled}
+                    onChange={(checked) => handleInputChange('accessEnabled', checked)}
+                  />
                 </div>
                 <div className="col-lg-2">
                   <label>Audit Trail Required</label>
-                  <div>
-                    <Switch
-                      checked={formState.auditTrail}
-                      onChange={(checked) => handleInputChange('auditTrail', checked)}
-                    />
-                  </div>
+                  <Switch
+                    checked={formState.auditTrail}
+                    onChange={(checked) => handleInputChange('auditTrail', checked)}
+                  />
                 </div>
               </div>
 
-              {/* Remarks */}
               <div className="row mt-3">
                 <div className="col-lg-12">
                   <label>Remarks</label>
@@ -201,14 +211,13 @@ const AccessRights = () => {
                 </div>
               </div>
 
-              {/* Buttons */}
               <div className="row mt-4">
-                <div className="col-lg-12">
-                  <button type="submit" className="btn btn-submit me-2">
-                    Save Access Rights
-                  </button>
+                <div className="col-lg-12 d-flex justify-content-between">
                   <button type="button" className="btn btn-cancel">
                     Cancel
+                  </button>
+                  <button type="submit" className="btn btn-submit me-2">
+                    Go to Profile Management
                   </button>
                 </div>
               </div>

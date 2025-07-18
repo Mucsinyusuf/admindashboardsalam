@@ -1,12 +1,36 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import Select from "react-select";
 import { DatePicker } from "antd";
 import { Calendar } from "feather-icons-react/build/IconComponents";
 
-const KYCForm = () => {
+const CompanyKYCDocuments = () => {
+  const navigate = useNavigate();
+
   const [issueDate, setIssueDate] = useState(null);
   const [expiryDate, setExpiryDate] = useState(null);
   const [lastVerifiedDate, setLastVerifiedDate] = useState(null);
+  const [issuingAuthority, setIssuingAuthority] = useState("");
+  const [remarks, setRemarks] = useState("");
+
+  const [documentType, setDocumentType] = useState(null);
+  const [verificationStatus, setVerificationStatus] = useState(null);
+  const [verifiedBy, setVerifiedBy] = useState(null);
+  const [complianceCategory, setComplianceCategory] = useState(null);
+
+  const [companyName, setCompanyName] = useState("");
+  const [accountData, setAccountData] = useState(null);
+  const [users, setUsers] = useState([]);
+
+  useEffect(() => {
+    const stored = sessionStorage.getItem("onboardingData");
+    if (stored) {
+      const parsed = JSON.parse(stored);
+      setCompanyName(parsed.accountData?.account_name || "");
+      setAccountData(parsed.accountData);
+      setUsers(parsed.users || []);
+    }
+  }, []);
 
   const documentTypes = [
     { value: "cert_of_incorp", label: "Certificate of Incorporation" },
@@ -30,33 +54,81 @@ const KYCForm = () => {
     { value: "jane_smith", label: "Jane Smith" },
   ];
 
+  const handleNext = (e) => {
+    e.preventDefault();
+
+    const step2Data = {
+      documentType,
+      issuingAuthority,
+      issueDate,
+      expiryDate,
+      verificationStatus,
+      verifiedBy,
+      lastVerifiedDate,
+      complianceCategory,
+      remarks,
+    };
+
+    const fullOnboardingData = {
+      accountData,
+      users,
+      kycDocuments: step2Data,
+    };
+
+    sessionStorage.setItem("onboardingData", JSON.stringify(fullOnboardingData));
+    navigate("/company-user-mapping");
+  };
+
+  const handleCancel = () => {
+    navigate("/account-lookup");
+  };
+
   return (
     <div className="row">
       <div className="content">
         <div className="page-header">
-          <h4>Company KYC Documents</h4>
-          <h6>Upload and verify KYC compliance</h6>
+          <h4>Step 2: Company KYC Documents</h4>
+          <h6>
+            Upload and verify KYC compliance for{" "}
+            <strong>{companyName}</strong>
+          </h6>
         </div>
-        <form>
+
+        <form onSubmit={handleNext}>
           <div className="card">
             <div className="card-body">
               <div className="row">
                 {/* Document Type */}
                 <div className="col-lg-4 mb-3">
                   <label className="form-label">Document Type</label>
-                  <Select options={documentTypes} placeholder="Choose" />
+                  <Select
+                    options={documentTypes}
+                    value={documentType}
+                    onChange={setDocumentType}
+                    placeholder="Choose"
+                  />
                 </div>
 
                 {/* Issuing Authority */}
                 <div className="col-lg-4 mb-3">
                   <label className="form-label">Issuing Authority</label>
-                  <input type="text" className="form-control" placeholder="Registrar, KRA, etc." />
+                  <input
+                    type="text"
+                    className="form-control"
+                    placeholder="Registrar, KRA, etc."
+                    value={issuingAuthority}
+                    onChange={(e) => setIssuingAuthority(e.target.value)}
+                  />
                 </div>
 
                 {/* File Upload */}
                 <div className="col-lg-4 mb-3">
                   <label className="form-label">Upload Document</label>
-                  <input type="file" accept=".pdf,.jpg,.jpeg,.png" className="form-control" />
+                  <input
+                    type="file"
+                    accept=".pdf,.jpg,.jpeg,.png"
+                    className="form-control"
+                  />
                 </div>
 
                 {/* Issue Date */}
@@ -90,13 +162,23 @@ const KYCForm = () => {
                 {/* Verification Status */}
                 <div className="col-lg-4 mb-3">
                   <label className="form-label">Verification Status</label>
-                  <Select options={verificationStatuses} placeholder="Choose" />
+                  <Select
+                    options={verificationStatuses}
+                    value={verificationStatus}
+                    onChange={setVerificationStatus}
+                    placeholder="Choose"
+                  />
                 </div>
 
                 {/* Verified By */}
                 <div className="col-lg-4 mb-3">
                   <label className="form-label">Verified By</label>
-                  <Select options={complianceOfficers} placeholder="Compliance Officer" />
+                  <Select
+                    options={complianceOfficers}
+                    value={verifiedBy}
+                    onChange={setVerifiedBy}
+                    placeholder="Compliance Officer"
+                  />
                 </div>
 
                 {/* Last Verified Date */}
@@ -116,21 +198,39 @@ const KYCForm = () => {
                 {/* Compliance Category */}
                 <div className="col-lg-4 mb-3">
                   <label className="form-label">Compliance Category</label>
-                  <Select options={complianceCategories} placeholder="Choose" />
+                  <Select
+                    options={complianceCategories}
+                    value={complianceCategory}
+                    onChange={setComplianceCategory}
+                    placeholder="Choose"
+                  />
                 </div>
 
                 {/* Remarks */}
                 <div className="col-lg-12 mb-3">
                   <label className="form-label">Remarks</label>
-                  <textarea className="form-control" rows={3} placeholder="Notes on verification..." />
+                  <textarea
+                    className="form-control"
+                    rows={3}
+                    placeholder="Notes on verification..."
+                    value={remarks}
+                    onChange={(e) => setRemarks(e.target.value)}
+                  />
                 </div>
               </div>
 
               {/* Actions */}
               <div className="text-end">
-                <button type="button" className="btn btn-secondary me-2">Cancel</button>
-                <button type="submit" className="btn btn-primary">Save KYC</button>
-                
+                <button
+                  type="button"
+                  className="btn btn-secondary me-2"
+                  onClick={handleCancel}
+                >
+                  Cancel
+                </button>
+                <button type="submit" className="btn btn-primary">
+                  Next: Company User Mapping →
+                </button>
               </div>
             </div>
           </div>
@@ -140,4 +240,4 @@ const KYCForm = () => {
   );
 };
 
-export default KYCForm;
+export default CompanyKYCDocuments;

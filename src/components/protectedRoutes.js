@@ -4,7 +4,7 @@
 import Dashboard from "../feature-module/dashboard/Dashboard";
 import SalesDashboard from "../feature-module/dashboard/Salesdashboard";
 import AccountLookupStep from "../feature-module/inventory/productlist";
-import KYCForm from "../feature-module/inventory/addproduct";
+import CompanyKYCDocuments from "../feature-module/inventory/addproduct";
 import CompanyUserMapping from "../feature-module/inventory/expiredproduct";
 import AccessRights from "../feature-module/inventory/lowstock";
 import ProfileManagement from "../feature-module/inventory/productdetail";
@@ -42,6 +42,8 @@ import UserActivityLogs from "../feature-module/settings/othersettings/ban-ipadd
 import ComplianceAlertList from "../feature-module/inventory/brandlist";
 import CategoryList from "../feature-module/inventory/categorylist";
 import EditProduct from "../feature-module/inventory/editproduct";
+import OnboardingSummary from "../feature-module/pages/register/onboardingsummery";
+
 
 
 
@@ -70,11 +72,13 @@ const protectedRoutes = [
   { path: "/heatmap", component: CategoryList},
 
   { path: "/corporate-onboarding", component:AccountLookupStep },
-  { path: "/company-KYC", component: KYCForm },
+  { path: "/company-KYC", component: CompanyKYCDocuments },
   { path: "/company-user-mapping", component: CompanyUserMapping },
   { path: "/company-access-rights", component: AccessRights },
   { path: "/profile-management", component: ProfileManagement },
   { path: "/companysignatories", component: CompanySignatories },
+  { path: "/onboarding-summary", component: OnboardingSummary },
+
   { path: "/accountTypes", component: AccountTypes },
 
   { path: "/manage-users", component: Users },

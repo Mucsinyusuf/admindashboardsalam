@@ -1,12 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useAuth } from "../../context/AuthContext";
-import Swal from "sweetalert2";
-import withReactContent from "sweetalert2-react-content";
 import { useNavigate } from "react-router-dom";
 
 const AccountLookupStep = () => {
   const { token } = useAuth();
-  const MySwal = withReactContent(Swal);
   const navigate = useNavigate();
 
   const [branch, setBranch] = useState("");
@@ -16,7 +13,6 @@ const AccountLookupStep = () => {
   const [users, setUsers] = useState([]);
   const [rolesList, setRolesList] = useState([]);
   const [searchError, setSearchError] = useState("");
-  console.log(MySwal);
 
   useEffect(() => {
     const fetchRoles = async () => {
@@ -90,12 +86,10 @@ const AccountLookupStep = () => {
   };
 
   const handleNext = () => {
-    // Store form state in sessionStorage
     sessionStorage.setItem(
       "onboardingStep1",
       JSON.stringify({ accountData, users })
     );
-
     navigate("/company-KYC");
   };
 
@@ -103,9 +97,10 @@ const AccountLookupStep = () => {
     <div className="row">
       <div className="page-header mb-4">
         <h4>Corporate Onboarding</h4>
-        <h6>Step 1: Account Look Up and Onboard Directors</h6>
+        <h6>Step 1: Account Look Up & Onboard Directors</h6>
       </div>
 
+      {/* Search Form */}
       <form className="row mb-3" onSubmit={handleSearch}>
         <div className="col-md-4">
           <input
@@ -136,43 +131,50 @@ const AccountLookupStep = () => {
 
       {searchError && <div className="alert alert-danger">{searchError}</div>}
 
-      {/* Account Details */}
+      {/* Always Visible Account Details */}
       <div className="card mb-4">
         <div className="card-header">Account Details</div>
         <div className="card-body">
           <div className="row g-3">
             {[
-              { label: "Account Number", value: accountData.account_number },
-              { label: "Account Name", value: accountData.account_name },
-              { label: "Customer No", value: accountData.custno },
-              { label: "Branch", value: accountData.brn },
-              { label: "Customer", value: accountData.details?.cust_name },
-              { label: "Owners", value: (accountData.owners || []).join(", ") },
-              { label: "Directors", value: (accountData.directors || []).join(", ") },
+              { label: "Account Number", value: accountData.account_number || "" },
+              { label: "Account Name", value: accountData.account_name || "" },
+              { label: "Customer No", value: accountData.custno || "" },
+              { label: "Branch", value: accountData.brn || "" },
+              { label: "Customer", value: accountData.details?.cust_name || "" },
+              {
+                label: "Owners",
+                value: (accountData.owners || []).join(", ") || "",
+              },
+              {
+                label: "Directors",
+                value: (accountData.directors || []).join(", ") || "",
+              },
               {
                 label: "Address",
-                value: [
-                  accountData.details?.address_1,
-                  accountData.details?.address_2,
-                  accountData.details?.address_3,
-                  accountData.details?.address_4,
-                ]
-                  .filter(Boolean)
-                  .join(", "),
+                value:
+                  [
+                    accountData.details?.address_1,
+                    accountData.details?.address_2,
+                    accountData.details?.address_3,
+                    accountData.details?.address_4,
+                  ]
+                    .filter(Boolean)
+                    .join(", ") || "",
               },
             ].map((field, i) => (
               <div className="col-md-6" key={i}>
                 <label className="form-label">{field.label}</label>
-                <input type="text" className="form-control" value={field.value || ""} readOnly />
+                <input type="text" className="form-control" value={field.value} readOnly />
               </div>
             ))}
           </div>
         </div>
       </div>
 
-      {/* Directors Table */}
+      {/* Directors Onboarding */}
       <div className="card">
-        <div className="card-header">Onboard Directors</div>
+        <div className="card-header">Update Form</div>
         <div className="card-body">
           <div className="table-responsive">
             <table className="table table-bordered table-sm">
@@ -210,7 +212,9 @@ const AccountLookupStep = () => {
                           type="text"
                           className="form-control form-control-sm"
                           value={user.username}
-                          onChange={(e) => handleUserChange(idx, "username", e.target.value)}
+                          onChange={(e) =>
+                            handleUserChange(idx, "username", e.target.value)
+                          }
                         />
                       </td>
                       <td>
@@ -218,7 +222,9 @@ const AccountLookupStep = () => {
                           type="password"
                           className="form-control form-control-sm"
                           value={user.password}
-                          onChange={(e) => handleUserChange(idx, "password", e.target.value)}
+                          onChange={(e) =>
+                            handleUserChange(idx, "password", e.target.value)
+                          }
                         />
                       </td>
                       <td>
@@ -226,7 +232,9 @@ const AccountLookupStep = () => {
                           type="text"
                           className="form-control form-control-sm"
                           value={user.phone}
-                          onChange={(e) => handleUserChange(idx, "phone", e.target.value)}
+                          onChange={(e) =>
+                            handleUserChange(idx, "phone", e.target.value)
+                          }
                         />
                       </td>
                       <td>
@@ -234,7 +242,9 @@ const AccountLookupStep = () => {
                           type="email"
                           className="form-control form-control-sm"
                           value={user.email}
-                          onChange={(e) => handleUserChange(idx, "email", e.target.value)}
+                          onChange={(e) =>
+                            handleUserChange(idx, "email", e.target.value)
+                          }
                         />
                       </td>
                       <td>
@@ -242,7 +252,9 @@ const AccountLookupStep = () => {
                           type="number"
                           className="form-control form-control-sm"
                           value={user.daily_limit}
-                          onChange={(e) => handleUserChange(idx, "daily_limit", e.target.value)}
+                          onChange={(e) =>
+                            handleUserChange(idx, "daily_limit", e.target.value)
+                          }
                         />
                       </td>
                       <td>
@@ -271,6 +283,7 @@ const AccountLookupStep = () => {
             </table>
           </div>
 
+          {/* Next Button */}
           <div className="text-end">
             <button
               className="btn btn-primary mt-3"
@@ -279,8 +292,6 @@ const AccountLookupStep = () => {
             >
               Next
             </button>
-            
-            
           </div>
         </div>
       </div>
